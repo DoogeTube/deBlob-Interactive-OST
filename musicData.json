@@ -13,43 +13,37 @@
                 ],
                 "variations": [
                     {
-                        "name": "inked",
-                        "enabled_stems": [
+                        "inked": [
                             "blissful-inked-1.flac"
                         ]
                     },
                     {
-                        "name": "low 1",
-                        "enabled_stems": [
+                        "low 1": [
                             "blissful-mezzo-1.flac"
                         ]
                     },
                     {
-                        "name": "low 2",
-                        "enabled_stems": [
+                        "low 2": [
                             "blissful-mezzo-1.flac",
                             "blissful-mezzo-2.flac"
                         ]
                     },
                     {
-                        "name": "medium 1",
-                        "enabled_stems": [
+                        "medium 1": [
                             "blissful-mezzo-1.flac",
                             "blissful-mezzo-2.flac",
                             "blissful-forte-1.flac"
                         ]
                     },
                     {
-                        "name": "medium 2",
-                        "enabled_stems": [
+                        "medium 2": [
                             "blissful-mezzo-2.flac",
                             "blissful-forte-1.flac",
                             "blissful-forte-2.flac"
                         ]
                     },
                     {
-                        "name": "high",
-                        "enabled_stems": [
+                        "high": [
                             "blissful-forte-1.flac",
                             "blissful-forte-2.flac",
                             "blissful-forte-3.flac"

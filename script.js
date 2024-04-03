@@ -18,6 +18,7 @@ const presetSlider = document.getElementById('presetSlider')
 var selectedGame = gameSelector.value
 var selectedMood = moodSelector.value
 var selectedColor = colorSelector.value
+var OpresetList = []
 var fetchedStems = []
 var fetchedSounds = []
 let audioElements = []
@@ -29,7 +30,7 @@ function changeGame() {
     let moods = musicData[selectedGame].moods
 
     // Clear current options
-    moodSelector.innerHTML = ''
+    moodSelector.innerHTML = '<option value="" disabled selected hidden>Select a Mood</option>'
 
 
     // Populate moodSelector with new options
@@ -39,7 +40,6 @@ function changeGame() {
         option.textContent = mood.name
         moodSelector.appendChild(option)
     })
-    changeMood()
 }
 //#endregion
 function changeMood() {
@@ -169,6 +169,7 @@ function createVolumeSliders() {
         slider.max = 1
         slider.step = 0.01
         slider.value = audio.volume
+        slider.className = 'slider'
 
         slider.addEventListener('input', () => {
             audio.volume = slider.value
@@ -210,11 +211,22 @@ function paint() {
 function findPresets() {
     let OmoodList = musicData[selectedGame].moods
     let OselectedMood = OmoodList.find(mood => mood.name === selectedMood)
-    let OpresetList = OselectedMood.variations
+    OpresetList = OselectedMood.variations
+    presetSlider.max = OpresetList.length - 1
 }
 function changePreset() {
-
+    let selectedPresetName = Object.keys(OpresetList[presetSlider.value])
+    let label = findLableForControl(presetSlider)
+    label.textContent = `preset: ${selectedPresetName}`
 }
+function findLableForControl(el) {
+    var idVal = el.id;
+    labels = document.getElementsByTagName('label');
+    for( var i = 0; i < labels.length; i++ ) {
+       if (labels[i].htmlFor == idVal)
+            return labels[i];
+    }
+ }
 //#endregion
 //#region Event Listeners
 document.addEventListener('DOMContentLoaded', function () {

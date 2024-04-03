@@ -18,20 +18,26 @@
         </header>
 
         <body>
-            <label for="game">Game:</label>
-            <select name="game" id="gameSelector">
-                <option value="deBlob">de Blob</option>
-                <option value="deBlob2">de Blob 2</option>
-            </select>
-            <label for="mood">Mood:</label>
-            <select name="mood" id="moodSelector">
-            </select>
-            <div id="parentVolumeSliderContainer">
-                <label for="masterVolume">Master:</label>
-                <input type="range" id="masterVolume"></input>
+            <div id="gameAndMood">
+                <select name="game" id="gameSelector" autocomplete="off">
+                    <option value="" disabled selected hidden>Select a Game</option>
+                    <option value="deBlob">de Blob</option>
+                    <option value="deBlob2">de Blob 2</option>
+                </select>
+                <select name="mood" id="moodSelector" autocomplete="off">
+                    <option value="" disabled selected hidden>Select a Mood</option>
+                </select>
+            </div>
+            <div id="parentVolumeSlidersContainer">
+                <div class="sliderContainer">
+                    <label for="masterVolume">Master:</label>
+                    <input class="slider" type="range" id="masterVolume"></input>
+                </div>
                 <div id="volumeSlidersContainer"></div>
-                <label for="presetSlider">preset:</label>
-                <input type="range" id="presetSlider" min="1" max="6"></input>
+                <div class="sliderContainer">
+                    <label for="presetSlider">preset:</label>
+                    <input class="slider" type="range" id="presetSlider" min="0" max="5"></input>
+                </div>
             </div>
             <label for="colorSelector">Color:</label>
             <select id="colorSelector">
