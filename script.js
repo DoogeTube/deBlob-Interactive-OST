@@ -15,6 +15,7 @@ const gameSelector = document.getElementById('gameSelector')
 const moodSelector = document.getElementById('moodSelector')
 const colorSelector = document.getElementById('colorSelector')
 const presetSlider = document.getElementById('presetSlider')
+const masterVolumeSlider = document.getElementById('masterVolumeSlider')
 var selectedGame = gameSelector.value
 var selectedMood = moodSelector.value
 var selectedColor = colorSelector.value
@@ -254,6 +255,9 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     presetSlider.addEventListener('input', function () {
         changePreset()
+    })
+    masterVolumeSlider.addeventListener('input', function () {
+
     })
 })
 //#endregion
