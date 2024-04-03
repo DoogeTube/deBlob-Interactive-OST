@@ -38,8 +38,12 @@
                 <option value="Victorious">Victorious</option>
                 <option value="Energetic">Energetic</option>
             </select>
-            <div id="volumeSlidersContainer">
-
+            <div id="parentVolumeSliderContainer">
+                <label for="masterVolume">Master:</label>
+                <input type="range" id="masterVolume"></input>
+                <div id="volumeSlidersContainer"></div>
+                <label for="presetSlider">preset:</label>
+                <input type="range" id="presetSlider" min="1" max="6" ></input>
             </div>
             <label for="colorSelector">Color:</label>
             <select id="colorSelector">
@@ -52,6 +56,7 @@
                 <option value="brown">Brown</option>
                 <option value="rainbow">Rainbow</option>
             </select>
+            <button onclick="paint()">Paint!</button>
         </body>
     </main>
     <script src="index.js"></script>

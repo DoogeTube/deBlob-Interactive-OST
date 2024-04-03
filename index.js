@@ -3,14 +3,16 @@ const range = document.getElementById('variation');
 const output = document.getElementById('variationValue');
 const gameSelector = document.getElementById('gameSelector');
 const moodSelector = document.getElementById('moodSelector');
+const colorSelector = document.getElementById('colorSelector')
 var selectedGame = gameSelector.value;
 var selectedMood = moodSelector.value;
+var selectedColor = colorSelector.value;
 var fetchedStems = [];
 let audioElements = [];
 // Object to hold the tracks for each game
 const tracks = {
     deBlob: ['Blissful', 'Funky', 'Unstoppable', 'Righteous', 'Euphoric', 'Smooth', 'Fearless', 'Defiant', 'Brazen', 'Revolutionary', 'Victorious', 'Energetic'],
-    deBlob2: ['Tranquil', 'Intrepid', 'Irrepressible', 'Steppin\'', 'Empowered', 'Gonzo', 'Fizzy', 'Chilled', 'Incendiary', 'Spirited', 'Playful', 'Mungo', 'Riotous', 'Pan-Galactic', 'Comrade Black']
+    deBlob2: ['Tranquil', 'Intrepid', 'Irrepressible', 'Steppin\'', 'Empowered', 'Gonzo', 'Fizzy', 'Chilled', 'Incendiary', 'Spirited', 'Playful', 'Riotous', 'Pan-Galactic']
 };
 //#region Game Selector
 // Function to populate moodSelector based on selected game
@@ -34,6 +36,7 @@ function changeGame() {
 changeGame();
 //#endregion
 function changeMood() {
+    selectedMood = moodSelector.value;
     killAudioElements()
     fetchStems();
 }
@@ -51,8 +54,6 @@ function killAudioElements() {
 function fetchStems() {
     moodSelector.disabled = true
     gameSelector.disabled = true
-    selectedGame = gameSelector.value;
-    selectedMood = moodSelector.value;
     fetchedStems = [];
     let stemTypes = [];
 
@@ -71,32 +72,23 @@ function fetchStems() {
     let formattedMoodIndex = String(moodIndex + 1).padStart(2, '0');
 
     function fetchStem(stemType, stemIndex = 1) {
-        return new Promise((resolve, reject) => {
-            let stemTypeKey;
-
-            if (selectedGame === 'deBlob') {
-                stemTypeKey = `${selectedMood.toLowerCase()}-${stemType}-${stemIndex}`;
-            } else if (selectedGame === 'deBlob2') {
-                stemTypeKey = `${stemType} ${stemIndex}`;
-            }
-
-            fetch(`Audio/${selectedGame}/Stems/${formattedMoodIndex}. ${selectedMood}/${stemTypeKey}.flac`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.blob();
-                })
-                .then(blob => {
-                    fetchedStems.push({ blob, stemTypeKey });
-                    console.log(`Fetched ${stemTypeKey} stem.`);
-                    resolve();
-                })
-                .catch(error => {
-                    console.error(`Error fetching ${stemTypeKey} stem:`, error.message);
-                    reject(error);
-                });
-        });
+        let stemTypeKey = (selectedGame === 'deBlob') ? `${selectedMood.toLowerCase()}-${stemType}-${stemIndex}` : `${stemType} ${stemIndex}`;
+    
+        return fetch(`Audio/${selectedGame}/Stems/${formattedMoodIndex}. ${selectedMood}/${stemTypeKey}.flac`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                fetchedStems.push({ blob, stemTypeKey });
+                console.log(`Fetched ${stemTypeKey} stem.`);
+            })
+            .catch(error => {
+                console.error(`Error fetching ${stemTypeKey} stem:`, error.message);
+                throw error;
+            });
     }
 
     function fetchStemTypesSequentially() {
@@ -177,6 +169,14 @@ function createVolumeSliders() {
     });
 }
 //#endregion
+//#region Color
+function changeColor(){
+    selectedColor = colorSelector.value
+}
+function paint(){
+    
+}
+//#endregion
 //#region Event Listeners
 document.addEventListener('DOMContentLoaded', function () {
     //Event listener for gameSelector change
@@ -186,6 +186,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Event listener for moodSelector change
     moodSelector.addEventListener('change', function () {
         changeMood();
+    });
+    // Event listener for colorSelector change
+    colorSelector.addEventListener('change', function () {
+        changeColor();
     });
 })
 //#endregion
