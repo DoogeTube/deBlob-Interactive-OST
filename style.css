@@ -1,0 +1,113 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    max-width: 800px;
+    margin: 40px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h1 {
+    color: #333;
+    margin: 0;
+}
+
+h2 {
+    color: #666;
+    margin: 0;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+}
+
+select,
+input[type="range"] {
+    width: 100%;
+    height: 30px;
+    border: 1px solid #ccc;
+}
+input[type=range] {
+    border-radius:100vh;
+}
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: round;
+    border-radius:100px;
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    background: #04AA6D; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+  }
+  
+  input[type="range"]::-moz-range-thumb {
+    border-radius:100px;
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    background: #04AA6D; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+  }
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#volumeSlidersContainer {
+    margin-bottom: 20px;
+}
+
+.sliderContainer {
+    margin-bottom: 15px;
+}
+
+.sliderContainer label {
+    display: inline-block;
+    width: 200px;
+}
+
+/* Responsive styles */
+@media (max-width: 600px) {
+    main {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    select,
+    input[type="range"],
+    button {
+        padding: 8px;
+    }
+}
