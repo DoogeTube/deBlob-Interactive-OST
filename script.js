@@ -199,7 +199,11 @@ function changeColor() {
 function paint() {
     let OmoodList = musicData[selectedGame].moods
     let OselectedMood = OmoodList.find(mood => mood.name === selectedMood)
-    let availableSoundNames = OselectedMood.colors[selectedColor]
+    let availableSoundNames = []
+    if (selectedColor == "rainbow") {
+        let allSoundNames = OselectedMood.colors["red"].concat(OselectedMood.colors["yellow"]).concat(OselectedMood.colors["blue"]).concat(OselectedMood.colors["orange"]).concat(OselectedMood.colors["green"]).concat(OselectedMood.colors["purple"]).concat(OselectedMood.colors["brown"])
+        availableSoundNames = allSoundNames
+    } else { availableSoundNames = OselectedMood.colors[selectedColor] }
     let randomIndex = Math.floor(Math.random() * availableSoundNames.length)
     let randomSoundName = availableSoundNames[randomIndex]
 
@@ -248,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function () {
     colorSelector.addEventListener('change', function () {
         changeColor()
     })
-    presetSlider.addEventListener('change', function () {
+    presetSlider.addEventListener('input', function () {
         changePreset()
     })
 })
