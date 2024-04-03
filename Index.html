@@ -30,8 +30,8 @@
             </div>
             <div id="parentVolumeSlidersContainer">
                 <div class="sliderContainer">
-                    <label for="masterVolume">Master:</label>
-                    <input class="slider" type="range" id="masterVolume"></input>
+                    <label for="masterVolumeSlider">Master:</label>
+                    <input class="slider" type="range" id="masterVolumeSlider" step="0.001"></input>
                 </div>
                 <div id="volumeSlidersContainer"></div>
                 <div class="sliderContainer">
@@ -39,16 +39,15 @@
                     <input class="slider" type="range" id="presetSlider" min="0" max="5"></input>
                 </div>
             </div>
-            <label for="colorSelector">Color:</label>
             <select id="colorSelector">
-                <option value="red">Red</option>
-                <option value="yellow">Yellow</option>
-                <option value="blue">Blue</option>
-                <option value="orange">Orange</option>
-                <option value="green">Green</option>
-                <option value="purple">Purple</option>
-                <option value="brown">Brown</option>
-                <option value="rainbow">Rainbow</option>
+                <option value="red">🟥</option>
+                <option value="yellow">🟨</option>
+                <option value="blue">🟦</option>
+                <option value="orange">🟧</option>
+                <option value="green">🟩</option>
+                <option value="purple">🟪</option>
+                <option value="brown">🟫</option>
+                <option value="rainbow">🌈</option>
             </select>
             <button onclick="paint()">Paint!</button>
         </body>

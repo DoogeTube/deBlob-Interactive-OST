@@ -45,7 +45,9 @@ label {
 #gameAndMood {
     display: flex;
 }
-
+#gameAndMood select{
+    width: 100%;
+}
 select {
     margin: 15px;
     background: linear-gradient(#44b0ac, #217872, #44b0ac);
@@ -62,7 +64,6 @@ select {
     appearance: none;
     transition: 0.1s;
 }
-
 select:hover {
     scale: 105%;
 }
@@ -70,6 +71,14 @@ select:hover {
 select:disabled {
     opacity: 75%;
     scale: 100%;
+}
+#colorSelector {
+    width: 50px;
+    height: 50px;
+    font-size: 28px;
+}
+#colorSelector:hover {
+    scale: 120%;
 }
 
 .sliderContainer {
