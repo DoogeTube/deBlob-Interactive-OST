@@ -3,7 +3,9 @@
     --main-color: #aa0000;
     --accent-color: #600000;
 }
-
+*{
+    cursor:auto;
+}
 body {
     font-family: Arial, sans-serif;
     background-color: var(--background-color);
@@ -14,7 +16,7 @@ body {
 main {
     max-width: 800px;
     margin: 40px auto;
-    background-color: #ff6666;
+    background-color: #fff6;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -39,12 +41,37 @@ label {
     display: block;
     font-weight: bold;
 }
-#gameAndMood{
-    display:flex;
+
+#gameAndMood {
+    display: flex;
 }
-#gameAndMood select{
+
+select {
     margin: 15px;
+    background: linear-gradient(#44b0ac, #217872, #44b0ac);
+    color: white;
+    width: 100%;
+    height: 30px;
+    border: 2px solid #000000;
+    background-color: #217872;
+    border-radius: 5px;
+    -moz-appearance: none;
+    /* Firefox */
+    -webkit-appearance: none;
+    /* Safari and Chrome */
+    appearance: none;
+    transition: 0.1s;
 }
+
+select:hover {
+    scale: 105%;
+}
+
+select:disabled {
+    opacity: 75%;
+    scale: 100%;
+}
+
 .sliderContainer {
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 100vmax;
@@ -59,14 +86,6 @@ label {
     background-color: rgba(255, 255, 255, 1);
 }
 
-select {
-    background: linear-gradient(#44b0ac, #217872, #44b0ac);
-    color: white;
-    width: 100%;
-    height: 30px;
-    border: 2px solid #000000;
-}
-
 /*#region Sliders*/
 .slider {
     background: #13615C;
@@ -76,7 +95,7 @@ select {
     border: 2px solid #000000;
     border-radius: 15px;
     -webkit-appearance: none;
-    appearance:none;
+    appearance: none;
 }
 
 .slider::-moz-range-track {
@@ -95,6 +114,7 @@ select {
     color: white;
     text-align: center;
     text-indent: .1em;
+    transition: scale 0.1s;
 }
 
 .slider::-moz-range-progress {
@@ -103,7 +123,8 @@ select {
     border-radius: 15px;
 }
 
-.slider::-moz-range-thumb:hover {
+.slider::-moz-range-thumb:hover,
+.slider::-moz-range-thumb:active {
     position: relative;
     width: 5%;
     margin: 20px 0;
@@ -114,6 +135,11 @@ select {
     color: white;
     text-align: center;
     text-indent: .1em;
+    scale: 110%;
+}
+
+.slider::-moz-range-thumb:active {
+    scale: 100%;
 }
 
 /* For Chrome */
@@ -196,4 +222,14 @@ button:active {
 .sliderContainer label {
     display: inline-block;
     width: 200px;
+}
+
+#bgVideo {
+    position: fixed;
+    right: 0;
+    top: 0;
+    min-width: 100%;
+    min-height: 100%;
+    transform: translateX(calc((100% - 100vw) / 2));
+    z-index: -1;
 }

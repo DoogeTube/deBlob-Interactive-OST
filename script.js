@@ -22,7 +22,13 @@ var OpresetList = []
 var fetchedStems = []
 var fetchedSounds = []
 let audioElements = []
-// Object to hold the tracks for each game
+
+randomColor()
+function randomColor() {
+    let randomNumber = Math.floor(Math.random() * 360)
+    let bgVideo = document.getElementById('bgVideo')
+    bgVideo.style.filter = `hue-rotate(${randomNumber}deg)`
+}
 //#region Game Selector
 // Function to populate moodSelector based on selected game
 function changeGame() {
@@ -167,7 +173,7 @@ function createVolumeSliders() {
         slider.type = 'range'
         slider.min = 0
         slider.max = 1
-        slider.step = 0.01
+        slider.step = 0.001
         slider.value = audio.volume
         slider.className = 'slider'
 
@@ -222,11 +228,11 @@ function changePreset() {
 function findLableForControl(el) {
     var idVal = el.id;
     labels = document.getElementsByTagName('label');
-    for( var i = 0; i < labels.length; i++ ) {
-       if (labels[i].htmlFor == idVal)
+    for (var i = 0; i < labels.length; i++) {
+        if (labels[i].htmlFor == idVal)
             return labels[i];
     }
- }
+}
 //#endregion
 //#region Event Listeners
 document.addEventListener('DOMContentLoaded', function () {
