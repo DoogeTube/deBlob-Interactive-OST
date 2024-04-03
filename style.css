@@ -3,9 +3,11 @@
     --main-color: #aa0000;
     --accent-color: #600000;
 }
-*{
-    cursor:auto;
+
+* {
+    cursor: auto;
 }
+
 body {
     font-family: Arial, sans-serif;
     background-color: var(--background-color);
@@ -19,7 +21,8 @@ main {
     background-color: #fff6;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px)
 }
 
 header {
@@ -45,9 +48,11 @@ label {
 #gameAndMood {
     display: flex;
 }
-#gameAndMood select{
+
+#gameAndMood select {
     width: 100%;
 }
+
 select {
     margin: 15px;
     background: linear-gradient(#44b0ac, #217872, #44b0ac);
@@ -64,6 +69,7 @@ select {
     appearance: none;
     transition: 0.1s;
 }
+
 select:hover {
     scale: 105%;
 }
@@ -72,11 +78,13 @@ select:disabled {
     opacity: 75%;
     scale: 100%;
 }
+
 #colorSelector {
     width: 50px;
     height: 50px;
     font-size: 28px;
 }
+
 #colorSelector:hover {
     scale: 120%;
 }
