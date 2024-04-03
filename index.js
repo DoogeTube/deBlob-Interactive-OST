@@ -1,4 +1,14 @@
-//Globals
+//Globalsd
+let musicData = {};
+fetch('./musicData.json')
+    .then(response => response.json())
+    .then(data => {
+        musicData = data;
+        changeGame()
+    })
+    .catch(error => {
+        console.error('Error fetching the JSON file:', error);
+    });
 const range = document.getElementById('variation');
 const output = document.getElementById('variationValue');
 const gameSelector = document.getElementById('gameSelector');
@@ -10,30 +20,25 @@ var selectedColor = colorSelector.value;
 var fetchedStems = [];
 let audioElements = [];
 // Object to hold the tracks for each game
-const tracks = {
-    deBlob: ['Blissful', 'Funky', 'Unstoppable', 'Righteous', 'Euphoric', 'Smooth', 'Fearless', 'Defiant', 'Brazen', 'Revolutionary', 'Victorious', 'Energetic'],
-    deBlob2: ['Tranquil', 'Intrepid', 'Irrepressible', 'Steppin\'', 'Empowered', 'Gonzo', 'Fizzy', 'Chilled', 'Incendiary', 'Spirited', 'Playful', 'Riotous', 'Pan-Galactic']
-};
 //#region Game Selector
 // Function to populate moodSelector based on selected game
 function changeGame() {
     selectedGame = gameSelector.value;
-    gameTracks = tracks[selectedGame];
+    let moods = musicData[selectedGame].moods
 
     // Clear current options
     moodSelector.innerHTML = '';
 
+
     // Populate moodSelector with new options
-    gameTracks.forEach(track => {
+    moods.forEach(mood => {
         const option = document.createElement('option');
-        option.value = track;
-        option.textContent = track;
+        option.value = mood.name;
+        option.textContent = mood.name;
         moodSelector.appendChild(option);
     });
     changeMood();
 }
-// Initial population of moodSelector based on default game
-changeGame();
 //#endregion
 function changeMood() {
     selectedMood = moodSelector.value;
@@ -41,12 +46,15 @@ function changeMood() {
     fetchStems();
 }
 function killAudioElements() {
-    audioElements.forEach((audio) => {
-        audio.pause(); // Pause the audio
-        audio.src = ''; // Clear the src attribute
-        audio.load(); // Load the audio to unload it
-        audio = null; // Nullify the audio object
-    });
+    if (audioElements.length !== 0) {
+        audioElements.forEach((audio) => {
+            audio.pause(); // Pause the audio
+            audio.src = ''; // Clear the src attribute
+            audio.load(); // Load the audio to unload it
+            audio = null; // Nullify the audio object
+        }
+        )
+    }
     audioElements = []; // Clear the audio elements array
 };
 
@@ -54,73 +62,43 @@ function killAudioElements() {
 function fetchStems() {
     moodSelector.disabled = true
     gameSelector.disabled = true
+    let OmoodList = musicData[selectedGame].moods
+    let OselectedMood = OmoodList.find(mood => mood.name === selectedMood);
+    let formattedMoodIndex = String(OmoodList.indexOf(OselectedMood) + 1).padStart(2, '0');
+    let stemNames = OselectedMood.stems
     fetchedStems = [];
-    let stemTypes = [];
-
-    const games = {
-        'deBlob': ['inked', 'piano', 'mezzo', 'forte'],
-        'deBlob2': ['clear', 'inked', 'low', 'medium', 'high']
-    };
-
-    if (games[selectedGame]) {
-        stemTypes = games[selectedGame];
-    } else {
-        throw new Error(`Invalid selectedGame: ${selectedGame}`);
-    }
-
-    let moodIndex = tracks[selectedGame].indexOf(selectedMood);
-    let formattedMoodIndex = String(moodIndex + 1).padStart(2, '0');
-
-    function fetchStem(stemType, stemIndex = 1) {
-        let stemTypeKey = (selectedGame === 'deBlob') ? `${selectedMood.toLowerCase()}-${stemType}-${stemIndex}` : `${stemType} ${stemIndex}`;
-    
-        return fetch(`Audio/${selectedGame}/Stems/${formattedMoodIndex}. ${selectedMood}/${stemTypeKey}.flac`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.blob();
-            })
-            .then(blob => {
-                fetchedStems.push({ blob, stemTypeKey });
-                console.log(`Fetched ${stemTypeKey} stem.`);
-            })
-            .catch(error => {
-                console.error(`Error fetching ${stemTypeKey} stem:`, error.message);
-                throw error;
-            });
-    }
-
-    function fetchStemTypesSequentially() {
-        return new Promise(async (resolve, reject) => {
-            for (let stemType of stemTypes) {
-                for (let stemIndex = 1; ; stemIndex++) {
-                    try {
-                        await fetchStem(stemType, stemIndex);
-                    } catch (error) {
-                        break;
+    var stemPromise = new Promise((resolve, reject) =>{
+        stemNames.forEach((stemName) => {
+            return fetch(`Audio/${selectedGame}/Stems/${formattedMoodIndex}. ${selectedMood}/${stemName}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
                     }
-                }
-            }
-            resolve();
+                    return response.blob();
+                })
+                .then(blob => {
+                    fetchedStems.push({ blob, stemName });
+                    console.log(`Fetched ${stemName} stem.`);
+                    if (fetchedStems.length === stemNames.length) resolve();
+                })
+                .catch(error => {
+                    console.error(`Error fetching ${stemName} stem:`, error.message);
+                    throw error;
+                });
         });
-    }
-
-    fetchStemTypesSequentially()
-        .then(() => {
-            console.log("All stems fetched");
-            createVolumeSliders();
-            moodSelector.disabled = false;
-            gameSelector.disabled = false;
-        })
-        .catch(error => {
-            console.error("Error fetching stems:", error);
-        });
+    })
+    stemPromise.then(() =>{
+    console.log("All stems fetched");
+    console.log(fetchedStems);
+    createVolumeSliders();
+    moodSelector.disabled = false;
+    gameSelector.disabled = false;
+    });
 }
 //#endregion
 //#region Handle Audio Elements
 function createVolumeSliders() {
-    let container = document.getElementById('volumeSlidersContainer'); // Assuming you have a container element with id 'volumeSlidersContainer'
+    let container = document.getElementById('volumeSlidersContainer');
 
     // Clear previous sliders
     container.innerHTML = '';
@@ -130,7 +108,7 @@ function createVolumeSliders() {
 
     fetchedStems.forEach((item) => {
         let blob = item.blob;
-        let stemTypeKey = item.stemTypeKey;
+        let stemName = item.stemName;
 
         let audio = new Audio();
         let objectUrl = URL.createObjectURL(blob);
@@ -145,7 +123,7 @@ function createVolumeSliders() {
         sliderContainer.className = 'sliderContainer';
 
         let label = document.createElement('label');
-        label.textContent = `${stemTypeKey}:`; // Use stem name as label
+        label.textContent = `${stemName}:`; // Use stem name as label
 
         let slider = document.createElement('input');
         slider.type = 'range';
@@ -170,11 +148,11 @@ function createVolumeSliders() {
 }
 //#endregion
 //#region Color
-function changeColor(){
+function changeColor() {
     selectedColor = colorSelector.value
 }
-function paint(){
-    
+function paint() {
+
 }
 //#endregion
 //#region Event Listeners
