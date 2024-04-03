@@ -9,53 +9,50 @@
     <link rel="stylesheet" href="./style.css">
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
 </head>
+<main>
+    <header>
+        <h1>DeBlob</h1>
+        <h2>Interactive OST</h2>
+    </header>
 
-<body>
-    <main>
-        <header>
-            <h1>DeBlob</h1>
-            <h2>Interactive OST</h2>
-        </header>
-
-        <body>
-            <div id="gameAndMood">
-                <select name="game" id="gameSelector" autocomplete="off">
-                    <option value="" disabled selected hidden>Select a Game</option>
-                    <option value="deBlob">de Blob</option>
-                    <option value="deBlob2">de Blob 2</option>
-                </select>
-                <select name="mood" id="moodSelector" autocomplete="off">
-                    <option value="" disabled selected hidden>Select a Mood</option>
-                </select>
-            </div>
-            <div id="parentVolumeSlidersContainer">
-                <div class="sliderContainer">
-                    <label for="masterVolumeSlider">Master:</label>
-                    <input class="slider" type="range" id="masterVolumeSlider" step="0.001"></input>
-                </div>
-                <div id="volumeSlidersContainer"></div>
-                <div class="sliderContainer">
-                    <label for="presetSlider">preset:</label>
-                    <input class="slider" type="range" id="presetSlider" min="0" max="5"></input>
-                </div>
-            </div>
-            <select id="colorSelector">
-                <option value="red">🟥</option>
-                <option value="yellow">🟨</option>
-                <option value="blue">🟦</option>
-                <option value="orange">🟧</option>
-                <option value="green">🟩</option>
-                <option value="purple">🟪</option>
-                <option value="brown">🟫</option>
-                <option value="rainbow">🌈</option>
+    <body>
+        <div id="gameAndMood">
+            <select name="game" id="gameSelector" autocomplete="off">
+                <option value="" disabled selected hidden>Select a Game</option>
+                <option value="deBlob">de Blob</option>
+                <option value="deBlob2">de Blob 2</option>
             </select>
-            <button onclick="paint()">Paint!</button>
-        </body>
-            <video autoplay muted loop id="bgVideo">
-                <source src="Videos/B2FE_Play_loop.bik.webm" type="video/webm">
-            </video>
-    </main>
-    <script src="script.js"></script>
-</body>
+            <select name="mood" id="moodSelector" autocomplete="off">
+                <option value="" disabled selected hidden>Select a Mood</option>
+            </select>
+        </div>
+        <div id="parentVolumeSlidersContainer">
+            <div class="sliderContainer">
+                <label for="masterVolumeSlider">Master:</label>
+                <input class="slider" type="range" id="masterVolumeSlider" step="0.001"></input>
+            </div>
+            <div id="volumeSlidersContainer"></div>
+            <div class="sliderContainer">
+                <label for="presetSlider">preset:</label>
+                <input class="slider" type="range" id="presetSlider" min="0" max="5"></input>
+            </div>
+        </div>
+        <select id="colorSelector">
+            <option value="red">🟥</option>
+            <option value="yellow">🟨</option>
+            <option value="blue">🟦</option>
+            <option value="orange">🟧</option>
+            <option value="green">🟩</option>
+            <option value="purple">🟪</option>
+            <option value="brown">🟫</option>
+            <option value="rainbow">🌈</option>
+        </select>
+        <button onclick="paint()">Paint!</button>
+    </body>
+</main>
+<video autoplay muted loop id="bgVideo">
+    <source src="Videos/B2FE_Play_loop.bik.webm" type="video/webm">
+</video>
+<script src="script.js"></script>
 
 </html>
