@@ -267,10 +267,10 @@ function findPresets(selectedGame, selectedMood) {
 }
 function changePreset(presetSliderElement, selectedPreset) {
     let selectedPresetName = Object.keys(OpresetList[selectedPreset])
-    let label = findLableForControl(presetSliderElement)
+    let label = findLabelForControl(presetSliderElement)
     label.textContent = `preset: ${selectedPresetName}`
 }
-function findLableForControl(el) {
+function findLabelForControl(el) {
     var idVal = el.id;
     labels = document.getElementsByTagName('label');
     for (var i = 0; i < labels.length; i++) {
