@@ -169,11 +169,12 @@ function fetchSounds(selectedGame, selectedMood) {
         console.log(`all sounds fetched`)
         disableControls(false)
     })
+    soundPromise.catch(() => {
+        alert('Failed to fetch one or more paint sounds from the server')
+        disableControls(false)
+    })
 }
-soundPromise.catch(() => {
-    alert('Failed to fetch one or more paint sounds from the server')
-    disableControls(false)
-})
+
 //#endregion
 //#region Handle Audio Elements
 function createVolumeSliders() {
