@@ -7,7 +7,7 @@ fetch('./musicData.json')
         musicData = data
     })
     .catch(error => {
-        console.error('musicData.json not found', error)
+        alert('musicData.json not found', error)
     })
 async function setup() {
     var gameSelectorElement = document.getElementById('gameSelector')
@@ -33,7 +33,7 @@ async function setup() {
         changePreset(presetSliderElement, selectedPreset)
     })
     masterVolumeSliderElement.addEventListener('input', function () {
-        changeVolume(masterVolumeSliderElement.value)
+        changeVolume(getMasterVolume())
     })
 }
 function disableControls(boolean) {
@@ -112,11 +112,11 @@ function fetchStems(selectedGame, selectedMood) {
                 })
                 .then(blob => {
                     fetchedStems.push({ blob, stemName })
-                    console.log(`Fetched ${stemName} stem.`)
                     if (fetchedStems.length === stemNames.length) resolve()
                 })
                 .catch(error => {
                     console.error(`Error fetching ${stemName} stem:`, error.message)
+                    reject()
                     throw error
                 })
         })
@@ -124,10 +124,14 @@ function fetchStems(selectedGame, selectedMood) {
     stemPromise.then(() => {
         console.log("All stems fetched")
         fetchedStems.sort((a, b) => {
-            return stemNames.indexOf(a.stemName) - stemNames.indexOf(b.stemName);
-        });
+            return stemNames.indexOf(a.stemName) - stemNames.indexOf(b.stemName)
+        })
         console.log(fetchedStems)
         createVolumeSliders()
+        disableControls(false)
+    })
+    stemPromise.catch(() => {
+        alert('Failed to fetch one or more stems from the server')
         disableControls(false)
     })
 }
@@ -138,29 +142,38 @@ function fetchSounds(selectedGame, selectedMood) {
     let formattedMoodIndex = String(OmoodList.indexOf(OselectedMood) + 1).padStart(2, '0')
     let colorNames = Object.keys(OselectedMood.colors)
 
-    console.log(`colorNames:` + colorNames)
-    colorNames.forEach((color) => {
-        let sounds = OselectedMood.colors[color]
-        sounds.forEach((soundName) => {
-            return fetch(`Audio/${selectedGame}/Sounds/${formattedMoodIndex}. ${selectedMood}/Colour Sounds/${color}/${soundName}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('NAUGHTY RESPONSE')
-                    }
-                    return response.blob()
-                })
-                .then(blob => {
-                    fetchedSounds.push({ blob, soundName })
-                    console.log(`Fetched ${soundName} stem.`)
-                    if (fetchedSounds.length === sounds.length) console.log(`fetched All Sounds!` + fetchedSounds)
-                })
-                .catch(error => {
-                    console.error(`Error fetching ${soundName} stem:`, error.message)
-                    throw error
-                })
+    var soundPromise = new Promise((resolve, reject) => {
+        colorNames.forEach((color) => {
+            let sounds = OselectedMood.colors[color]
+            sounds.forEach((soundName) => {
+                return fetch(`Audio/${selectedGame}/Sounds/${formattedMoodIndex}. ${selectedMood}/Colour Sounds/${color}/${soundName}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('NAUGHTY RESPONSE')
+                        }
+                        return response.blob()
+                    })
+                    .then(blob => {
+                        fetchedSounds.push({ blob, soundName })
+                        resolve()
+                    })
+                    .catch(error => {
+                        console.error(`Error fetching ${soundName} stem:`, error.message)
+                        reject()
+                        throw error
+                    })
+            })
         })
     })
+    soundPromise.then(() => {
+        console.log(`all sounds fetched`)
+        disableControls(false)
+    })
 }
+stemPromise.catch(() => {
+    alert('Failed to fetch one or more paint sounds from the server')
+    disableControls(false)
+})
 //#endregion
 //#region Handle Audio Elements
 function createVolumeSliders() {
@@ -183,7 +196,7 @@ function createVolumeSliders() {
 
         // Auto-play the audio
         audioTrack.play()
-        audioTrack.volume = 1.0
+        audioTrack.volume = getMasterVolume()
 
         audioTrackList.push(audioTrack) // Push the audio element to the array
 
@@ -218,13 +231,13 @@ function createVolumeSliders() {
 }
 function changeVolume(masterVolume) {
     audioTrackList.forEach((audio, index) => {
-        audio.volume = parseFloat((audioTrackVolumeList[index] * 1.0) * (masterVolume / 100.0))
-        console.log(parseFloat((audioTrackVolumeList[index] * 1.0) * (masterVolume / 100.0)))
+        audio.volume = parseFloat((audioTrackVolumeList[index] * 1.0) * (masterVolume))
+        console.log(parseFloat((audioTrackVolumeList[index] * 1.0) * (masterVolume)))
     })
 }
 function getMasterVolume() {
     let masterVolume = document.getElementById('masterVolumeSlider').value
-    return masterVolume
+    return masterVolume / 100
 }
 //#endregion
 //#region Color
@@ -259,11 +272,17 @@ function paint() {
 function findPresets(selectedGame, selectedMood) {
     OpresetList = []
     let presetSliderElement = document.getElementById('presetSlider')
+    let presetSliderContainerElement = document.getElementById('presetSliderContainer')
     let OmoodList = musicData[selectedGame].moods
     let OselectedMood = OmoodList.find(mood => mood.name === selectedMood)
     OpresetList = OselectedMood.variations
     presetSliderElement.max = OpresetList.length - 1
-    changePreset(presetSliderElement, presetSliderElement.value)
+    if (OpresetList.length == 0) {
+        presetSliderContainerElement.style = "display:none"
+    } else {
+        changePreset(presetSliderElement, presetSliderElement.value)
+        presetSliderContainerElement.style = "display:visible"
+    }
 }
 function changePreset(presetSliderElement, selectedPreset) {
     let selectedPresetName = Object.keys(OpresetList[selectedPreset])
@@ -271,11 +290,11 @@ function changePreset(presetSliderElement, selectedPreset) {
     label.textContent = `preset: ${selectedPresetName}`
 }
 function findLabelForControl(el) {
-    var idVal = el.id;
-    labels = document.getElementsByTagName('label');
+    var idVal = el.id
+    labels = document.getElementsByTagName('label')
     for (var i = 0; i < labels.length; i++) {
         if (labels[i].htmlFor == idVal)
-            return labels[i];
+            return labels[i]
     }
 }
 //#endregion
