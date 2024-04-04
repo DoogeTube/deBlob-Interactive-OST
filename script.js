@@ -170,7 +170,7 @@ function fetchSounds(selectedGame, selectedMood) {
         disableControls(false)
     })
 }
-stemPromise.catch(() => {
+soundPromise.catch(() => {
     alert('Failed to fetch one or more paint sounds from the server')
     disableControls(false)
 })
