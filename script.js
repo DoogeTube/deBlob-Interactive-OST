@@ -224,9 +224,12 @@ function createVolumeSliders() {
         sliderContainer.appendChild(slider)
         container.appendChild(sliderContainer)
 
-        // Clean up the object URL when no longer needed
+        // Loop the audio elements by killing them and respawning them so they don't lose sync after hours of looping
         audioTrack.addEventListener('ended', () => {
-            URL.revokeObjectURL(objectUrl)
+            audioTrackList.forEach((audioTrack) => {
+                audioTrack.load()
+                audioTrack.play()
+            })
         })
     })
 }
