@@ -148,7 +148,7 @@ select:disabled {
 .slider::-moz-range-thumb:hover,
 .slider::-moz-range-thumb:active {
     position: relative;
-    width: 5%;
+    width: 30px;
     margin: 20px 0;
     border-width: 4px;
     border-color: orange;
@@ -184,7 +184,7 @@ select:disabled {
 }
 
 .slider::-webkit-slider-thumb:hover {
-    width: 5%;
+    width: 30px;
     background: linear-gradient(#44b0ac, #217872, #44b0ac);
 }
 
