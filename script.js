@@ -22,8 +22,8 @@ var selectedColor = colorSelector.value
 var OpresetList = []
 var fetchedStems = []
 var fetchedSounds = []
-let audioElements = []
-
+let audioTrackList = []
+let audioTrackVolumeList = []
 randomColor()
 function randomColor() {
     let randomNumber = Math.floor(Math.random() * 360)
@@ -51,21 +51,22 @@ function changeGame() {
 //#endregion
 function changeMood() {
     selectedMood = moodSelector.value
-    killAudioElements()
+    killaudioTrackList()
     fetchStems()
     findPresets()
 }
-function killAudioElements() {
-    if (audioElements.length !== 0) {
-        audioElements.forEach((audio) => {
-            audio.pause() // Pause the audio
-            audio.src = '' // Clear the src attribute
-            audio.load() // Load the audio to unload it
-            audio = null // Nullify the audio object
+function killaudioTrackList() {
+    if (audioTrackList.length !== 0) {
+        audioTrackList.forEach((audioTrack) => {
+            audioTrack.pause() // Pause the audio
+            audioTrack.src = '' // Clear the src attribute
+            audioTrack.load() // Load the audio to unload it
+            audioTrack = null // Nullify the audio object
         }
         )
     }
-    audioElements = [] // Clear the audio elements array
+    audioTrackList = [] // Clear the audio elements array
+
 }
 
 //#region Fetch Stems
@@ -148,21 +149,23 @@ function createVolumeSliders() {
     // Clear previous sliders
     container.innerHTML = ''
 
-    // Clear the audioElements array
-    audioElements = []
-
-    fetchedStems.forEach((item) => {
+    // Clear the audioTrackList array
+    audioTrackList = []
+    
+    fetchedStems.forEach((item, index) => {
         let blob = item.blob
         let stemName = item.stemName
+        audioTrackVolumeList[index] = 1.0
 
-        let audio = new Audio()
+        let audioTrack = new Audio()
         let objectUrl = URL.createObjectURL(blob)
-        audio.src = objectUrl
+        audioTrack.src = objectUrl
 
         // Auto-play the audio
-        audio.play()
+        audioTrack.play()
+        audioTrack.volume = 1.0
 
-        audioElements.push(audio) // Push the audio element to the array
+        audioTrackList.push(audioTrack) // Push the audio element to the array
 
         let sliderContainer = document.createElement('div')
         sliderContainer.className = 'sliderContainer'
@@ -175,11 +178,12 @@ function createVolumeSliders() {
         slider.min = 0
         slider.max = 1
         slider.step = 0.001
-        slider.value = audio.volume
+        slider.value = 1
         slider.className = 'slider'
 
         slider.addEventListener('input', () => {
-            audio.volume = slider.value
+            audioTrackVolumeList[index] = slider.value
+            changeVolume()
         })
 
         sliderContainer.appendChild(label)
@@ -187,7 +191,7 @@ function createVolumeSliders() {
         container.appendChild(sliderContainer)
 
         // Clean up the object URL when no longer needed
-        audio.addEventListener('ended', () => {
+        audioTrack.addEventListener('ended', () => {
             URL.revokeObjectURL(objectUrl)
         })
     })
@@ -218,6 +222,12 @@ function paint() {
     paintAudio.play()
 
     paintAudio.volume = 1.0
+}
+function changeVolume() {
+    audioTrackList.forEach((audio, index) => {
+        audio.volume = parseFloat((audioTrackVolumeList[index] * 1.0) * (masterVolumeSlider.value / 100.0))
+        console.log(parseFloat((audioTrackVolumeList[index] * 1.0) * (masterVolumeSlider.value / 100.0)))
+    })
 }
 function findPresets() {
     let OmoodList = musicData[selectedGame].moods
@@ -256,8 +266,8 @@ document.addEventListener('DOMContentLoaded', function () {
     presetSlider.addEventListener('input', function () {
         changePreset()
     })
-    masterVolumeSlider.addeventListener('input', function () {
-
+    masterVolumeSlider.addEventListener('input', function () {
+        changeVolume()
     })
 })
 //#endregion
