@@ -179,7 +179,16 @@ function fetchSounds(selectedGame, selectedMood) {
 //#region Handle Audio Elements
 function createVolumeSliders() {
     let container = document.getElementById('volumeSlidersContainer')
+    let numReady = 0
 
+    let checkIfReady = setInterval(() => {
+        if (numReady == audioTrackList.length) {
+            audioTrackList.forEach((audioTrack) => {
+                audioTrack.play()
+            })
+        }
+        clearInterval(checkIfReady)
+    }, 10)
     // Clear previous sliders
     container.innerHTML = ''
 
@@ -195,9 +204,10 @@ function createVolumeSliders() {
         let objectUrl = URL.createObjectURL(blob)
         audioTrack.src = objectUrl
 
-        // Auto-play the audio
-        audioTrack.play()
-        audioTrack.volume = getMasterVolume()
+        audioTrack.addEventListener("canplaythrough", () => {
+            numReady++
+        })
+
 
         audioTrackList.push(audioTrack) // Push the audio element to the array
 
