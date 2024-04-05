@@ -6333,17 +6333,90 @@
             {
                 "name": "Demo",
                 "stems": [
-                    "demo-forte-1.flac",
-                    "demo-forte-2.flac",
-                    "demo-forte-3.flac",
-                    "demo-inked.flac",
-                    "demo-mezzo-1.flac",
-                    "demo-mezzo-2.flac",
-                    "demo-mezzo-3.flac",
-                    "demo-mezzo-4.flac",
-                    "forte-3.flac"
+                    "inked.flac",
+                    "low 1.flac",
+                    "low 2.flac",
+                    "low 3.flac",
+                    "low 4.flac",
+                    "high 1.flac",
+                    "high 2.flac",
+                    "high 3.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                        "none": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7
+                        ]
+                    },
+                    {
+                        "inked": [
+                            0
+                        ]
+                    },
+                    {
+                        "low 1": [
+                            1
+                        ]
+                    },
+                    {
+                        "low 2": [
+                            1,
+                            2
+                        ]
+                    },
+                    {
+                        "medium 1": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    {
+                        "medium 2": [
+                            1,
+                            2,
+                            3,
+                            4
+                        ]
+                    },
+                    {
+                        "high 1": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5
+                        ]
+                    },
+                    {
+                        "high 2": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                        ]
+                    },
+                    {
+                        "high 3": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7
+                        ]
+                    }
+                ],
                 "colors": {}
             },
             {
