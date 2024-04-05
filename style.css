@@ -5,7 +5,7 @@
 }
 
 * {
-    cursor: auto;
+    cursor: url('images/cursor.cur'), auto;
 }
 
 body {
@@ -174,7 +174,6 @@ select:disabled {
     background: #13615C;
     border: 4px solid orange;
     border-radius: 50% / 10%;
-    cursor: pointer;
 }
 
 .slider::-webkit-slider-runnable-track {
@@ -194,7 +193,6 @@ button {
     border-radius: 12px;
     border: 4px solid #fcab4900;
     display: inline-block;
-    cursor: pointer;
     color: #1D998F;
     font-family: Verdana;
     font-size: 28px;
@@ -211,7 +209,6 @@ button:hover {
     border-radius: 12px;
     border: 4px solid #fcac49;
     display: inline-block;
-    cursor: pointer;
     color: #ffffff;
     font-family: Verdana;
     font-size: 28px;
@@ -226,7 +223,6 @@ button:active {
     border-radius: 12px;
     border: 4px solid #fcab4900;
     display: inline-block;
-    cursor: pointer;
     color: #1D998F;
     font-family: Verdana;
     font-size: 28px;
