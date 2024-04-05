@@ -44,7 +44,6 @@ function disableControls(boolean) {
 }
 //global variables to remove
 var OpresetList = []
-var fetchedStems = []
 var fetchedSounds = []
 let audioTrackList = []
 let audioTrackVolumeList = []
@@ -76,6 +75,14 @@ function changeGame(selectedGame) {
 function changeMood(selectedGame, selectedMood) {
     killaudioTrackList()
     fetchStems(selectedGame, selectedMood)
+        .then(fetchedStems => {
+            createAudioElements(fetchedStems);
+        })
+        .catch(error => {
+            alert("Error fetching stems:", error);
+            disableControls(false)
+        });
+    console.log(fetchStems(selectedGame, selectedMood))
     findPresets(selectedGame, selectedMood)
     fetchSounds(selectedGame, selectedMood)
 }
@@ -100,9 +107,9 @@ function fetchStems(selectedGame, selectedMood) {
     let selectedMoodObject = OmoodList.find(mood => mood.name === selectedMood)
     let formattedMoodIndex = String(OmoodList.indexOf(selectedMoodObject) + 1).padStart(2, '0')
     let stemNames = selectedMoodObject.stems
-    fetchedStems = []
-    var stemPromise = new Promise((resolve, reject) => {
-        stemNames.forEach((stemName) => {
+    let fetchedStems = []
+    return new Promise((resolve, reject) => {
+        let promises = stemNames.map((stemName) => {
             return fetch(`Audio/${selectedGame}/Stems/${formattedMoodIndex}. ${selectedMood}/${stemName}`)
                 .then(response => {
                     if (!response.ok) {
@@ -112,27 +119,22 @@ function fetchStems(selectedGame, selectedMood) {
                 })
                 .then(blob => {
                     fetchedStems.push({ blob, stemName })
-                    if (fetchedStems.length === stemNames.length) resolve()
+                    if (fetchedStems.length === stemNames.length) {
+                        fetchedStems.sort((a, b) => {
+                            return stemNames.indexOf(a.stemName) - stemNames.indexOf(b.stemName)
+                        })
+                        resolve(fetchedStems)
+                    }
                 })
                 .catch(error => {
                     console.error(`Error fetching ${stemName} stem:`, error.message)
-                    reject()
-                    throw error
+                    reject(error)
                 })
         })
-    })
-    stemPromise.then(() => {
-        console.log("All stems fetched")
-        fetchedStems.sort((a, b) => {
-            return stemNames.indexOf(a.stemName) - stemNames.indexOf(b.stemName)
-        })
-        console.log(fetchedStems)
-        createVolumeSliders()
-        disableControls(false)
-    })
-    stemPromise.catch(() => {
-        alert('Failed to fetch one or more stems from the server')
-        disableControls(false)
+        Promise.all(promises)
+            .catch(() => {
+                alert('Failed to fetch one or more stems from the server')
+            })
     })
 }
 function fetchSounds(selectedGame, selectedMood) {
@@ -167,7 +169,6 @@ function fetchSounds(selectedGame, selectedMood) {
     })
     soundPromise.then(() => {
         console.log(`all sounds fetched`)
-        disableControls(false)
     })
     soundPromise.catch(() => {
         alert('Failed to fetch one or more paint sounds from the server')
@@ -177,40 +178,41 @@ function fetchSounds(selectedGame, selectedMood) {
 
 //#endregion
 //#region Handle Audio Elements
-function createVolumeSliders() {
-    let container = document.getElementById('volumeSlidersContainer')
-    let numReady = 0
-
-    let checkIfReady = setInterval(() => {
-        if (numReady == audioTrackList.length) {
-            audioTrackList.forEach((audioTrack) => {
-                audioTrack.play()
-            })
-        }
-        clearInterval(checkIfReady)
-    }, 10)
-    // Clear previous sliders
-    container.innerHTML = ''
-
-    // Clear the audioTrackList array
+function createAudioElements(fetchedStems) {
     audioTrackList = []
-
+    let numReady = 0
     fetchedStems.forEach((item, index) => {
         let blob = item.blob
-        let stemName = item.stemName
         audioTrackVolumeList[index] = 1.0
 
         let audioTrack = new Audio()
-        let objectUrl = URL.createObjectURL(blob)
-        audioTrack.src = objectUrl
+        audioTrackList.push(audioTrack)
 
         audioTrack.addEventListener("canplaythrough", () => {
             numReady++
         })
+        let objectUrl = URL.createObjectURL(blob)
+        audioTrack.src = objectUrl
+        syncLoop(audioTrack)
+    })
+    let checkIfReady = setInterval(() => {
+        if (numReady == audioTrackList.length) {
+            audioTrackList.forEach((audioTrack) => {
+                audioTrack.play()
+                audioTrack.volume = getMasterVolume();
+                disableControls(false)
+            })
+            clearInterval(checkIfReady)
+            createVolumeSliders(fetchedStems)
+        }
+    }, 10)
+}
 
-
-        audioTrackList.push(audioTrack) // Push the audio element to the array
-
+function createVolumeSliders(fetchedStems) {
+    let container = document.getElementById('volumeSlidersContainer')
+    container.innerHTML = ''
+    fetchedStems.forEach((item, index) => {
+        let stemName = item.stemName
         let sliderContainer = document.createElement('div')
         sliderContainer.className = 'sliderContainer'
 
@@ -224,6 +226,7 @@ function createVolumeSliders() {
         slider.step = 0.001
         slider.value = 1
         slider.className = 'slider'
+        slider.id = 'stemSlider' + index
 
         slider.addEventListener('input', () => {
             audioTrackVolumeList[index] = slider.value
@@ -233,13 +236,13 @@ function createVolumeSliders() {
         sliderContainer.appendChild(label)
         sliderContainer.appendChild(slider)
         container.appendChild(sliderContainer)
-
-        // Loop the audio elements by killing them and respawning them so they don't lose sync after hours of looping
-        audioTrack.addEventListener('ended', () => {
-            audioTrackList.forEach((audioTrack) => {
-                audioTrack.load()
-                audioTrack.play()
-            })
+    })
+}
+function syncLoop(audioTrack) {
+    audioTrack.addEventListener('ended', () => {
+        audioTrackList.forEach((audioTrack) => {
+            audioTrack.load()
+            audioTrack.play()
         })
     })
 }
