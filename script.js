@@ -97,9 +97,9 @@ function killaudioTrackList() {
 function fetchStems(selectedGame, selectedMood) {
     disableControls(true)
     let OmoodList = musicData[selectedGame].moods
-    let OselectedMood = OmoodList.find(mood => mood.name === selectedMood)
-    let formattedMoodIndex = String(OmoodList.indexOf(OselectedMood) + 1).padStart(2, '0')
-    let stemNames = OselectedMood.stems
+    let selectedMoodObject = OmoodList.find(mood => mood.name === selectedMood)
+    let formattedMoodIndex = String(OmoodList.indexOf(selectedMoodObject) + 1).padStart(2, '0')
+    let stemNames = selectedMoodObject.stems
     fetchedStems = []
     var stemPromise = new Promise((resolve, reject) => {
         stemNames.forEach((stemName) => {
@@ -138,13 +138,13 @@ function fetchStems(selectedGame, selectedMood) {
 function fetchSounds(selectedGame, selectedMood) {
     disableControls(true)
     let OmoodList = musicData[selectedGame].moods
-    let OselectedMood = OmoodList.find(mood => mood.name === selectedMood)
-    let formattedMoodIndex = String(OmoodList.indexOf(OselectedMood) + 1).padStart(2, '0')
-    let colorNames = Object.keys(OselectedMood.colors)
+    let selectedMoodObject = OmoodList.find(mood => mood.name === selectedMood)
+    let formattedMoodIndex = String(OmoodList.indexOf(selectedMoodObject) + 1).padStart(2, '0')
+    let colorNames = Object.keys(selectedMoodObject.colors)
 
     var soundPromise = new Promise((resolve, reject) => {
         colorNames.forEach((color) => {
-            let sounds = OselectedMood.colors[color]
+            let sounds = selectedMoodObject.colors[color]
             sounds.forEach((soundName) => {
                 return fetch(`Audio/${selectedGame}/Sounds/${formattedMoodIndex}. ${selectedMood}/Colour Sounds/${color}/${soundName}`)
                     .then(response => {
@@ -253,12 +253,12 @@ function paint() {
     let selectedMood = document.getElementById('moodSelector').value
     let selectedColor = document.getElementById('colorSelector').value
     let OmoodList = musicData[selectedGame].moods
-    let OselectedMood = OmoodList.find(mood => mood.name === selectedMood)
+    let selectedMoodObject = OmoodList.find(mood => mood.name === selectedMood)
     let availableSoundNames = []
     if (selectedColor == "rainbow") {
-        let allSoundNames = OselectedMood.colors["red"].concat(OselectedMood.colors["yellow"]).concat(OselectedMood.colors["blue"]).concat(OselectedMood.colors["orange"]).concat(OselectedMood.colors["green"]).concat(OselectedMood.colors["purple"]).concat(OselectedMood.colors["brown"])
+        let allSoundNames = selectedMoodObject.colors["red"].concat(selectedMoodObject.colors["yellow"]).concat(selectedMoodObject.colors["blue"]).concat(selectedMoodObject.colors["orange"]).concat(selectedMoodObject.colors["green"]).concat(selectedMoodObject.colors["purple"]).concat(selectedMoodObject.colors["brown"])
         availableSoundNames = allSoundNames
-    } else { availableSoundNames = OselectedMood.colors[selectedColor] }
+    } else { availableSoundNames = selectedMoodObject.colors[selectedColor] }
     let randomIndex = Math.floor(Math.random() * availableSoundNames.length)
     let randomSoundName = availableSoundNames[randomIndex]
 
@@ -278,8 +278,8 @@ function findPresets(selectedGame, selectedMood) {
     let presetSliderElement = document.getElementById('presetSlider')
     let presetSliderContainerElement = document.getElementById('presetSliderContainer')
     let OmoodList = musicData[selectedGame].moods
-    let OselectedMood = OmoodList.find(mood => mood.name === selectedMood)
-    OpresetList = OselectedMood.variations
+    let selectedMoodObject = OmoodList.find(mood => mood.name === selectedMood)
+    OpresetList = selectedMoodObject.variations
     presetSliderElement.max = OpresetList.length - 1
     if (OpresetList.length == 0) {
         presetSliderContainerElement.style = "display:none"
@@ -289,9 +289,20 @@ function findPresets(selectedGame, selectedMood) {
     }
 }
 function changePreset(presetSliderElement, selectedPreset) {
-    let selectedPresetName = Object.keys(OpresetList[selectedPreset])
+    let selectedPresetObject = OpresetList[selectedPreset]
     let label = findLabelForControl(presetSliderElement)
-    label.textContent = `preset: ${selectedPresetName}`
+    label.textContent = `preset: ${Object.keys(selectedPresetObject)[0]}`
+    applyPreset(selectedPresetObject)
+}
+function applyPreset(selectedPresetObject){
+    let selectedPresetArray = Object.values(selectedPresetObject)[0]
+    audioTrackList.forEach((audio, index) => {
+        if (selectedPresetArray.includes(index)) {
+        audio.volume = parseFloat((audioTrackVolumeList[index] * 1.0) * (getMasterVolume()))
+        } else {
+            audio.volume = 0
+        }
+    })
 }
 function findLabelForControl(el) {
     var idVal = el.id

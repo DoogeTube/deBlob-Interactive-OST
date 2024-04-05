@@ -7,47 +7,28 @@
                     "blissful-forte-1.flac",
                     "blissful-forte-2.flac",
                     "blissful-forte-3.flac",
-                    "blissful-inked-1.flac",
                     "blissful-mezzo-1.flac",
-                    "blissful-mezzo-2.flac"
+                    "blissful-mezzo-2.flac",
+                    "blissful-inked-1.flac"
                 ],
                 "variations": [
                     {
-                        "inked": [
-                            "blissful-inked-1.flac"
-                        ]
+                        "inked": [5]
                     },
                     {
-                        "low 1": [
-                            "blissful-mezzo-1.flac"
-                        ]
+                        "low 1": [3]
                     },
                     {
-                        "low 2": [
-                            "blissful-mezzo-1.flac",
-                            "blissful-mezzo-2.flac"
-                        ]
+                        "low 2": [3, 4]
                     },
                     {
-                        "medium 1": [
-                            "blissful-mezzo-1.flac",
-                            "blissful-mezzo-2.flac",
-                            "blissful-forte-1.flac"
-                        ]
+                        "medium 1": [0, 3, 4]
                     },
                     {
-                        "medium 2": [
-                            "blissful-mezzo-2.flac",
-                            "blissful-forte-1.flac",
-                            "blissful-forte-2.flac"
-                        ]
+                        "medium 2": [4, 0, 1]
                     },
                     {
-                        "high": [
-                            "blissful-forte-1.flac",
-                            "blissful-forte-2.flac",
-                            "blissful-forte-3.flac"
-                        ]
+                        "high": [0, 1, 2]
                     }
                 ],
                 "colors": {
