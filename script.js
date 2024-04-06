@@ -15,6 +15,7 @@ async function setup() {
     var colorSelectorElement = document.getElementById('colorSelector')
     var presetSliderElement = document.getElementById('presetSlider')
     var masterVolumeSliderElement = document.getElementById('masterVolumeSlider')
+    var playPauseElement = document.getElementById('playPause')
     gameSelectorElement.addEventListener('change', function () {
         let selectedGame = gameSelectorElement.value
         changeGame(selectedGame)
@@ -35,12 +36,19 @@ async function setup() {
     masterVolumeSliderElement.addEventListener('input', function () {
         changeMasterVolume(getMasterVolume())
     })
+    playPauseElement.addEventListener('click', function () {
+        togglePlayPauseAllTracks(playPauseElement)
+    })
 }
 function disableControls(boolean) {
     let gameSelectorElement = document.getElementById('gameSelector')
     let moodSelectorElement = document.getElementById('moodSelector')
+    let playPauseElement = document.getElementById('playPause')
+    let syncButtonElement = document.getElementById('syncButton')
     moodSelectorElement.disabled = boolean
     gameSelectorElement.disabled = boolean
+    playPauseElement.disabled = boolean
+    syncButtonElement.disabled = boolean
 }
 //global variables to remove
 var presetListObject = []
@@ -82,21 +90,21 @@ function changeMood(selectedGame, selectedMood) {
             alert("Error fetching stems:", error);
             disableControls(false)
         });
-    console.log(fetchStems(selectedGame, selectedMood))
     findPresets(selectedGame, selectedMood)
     fetchSounds(selectedGame, selectedMood)
 }
 function killaudioTrackList() {
     if (audioTrackList.length !== 0) {
         audioTrackList.forEach((audioTrack) => {
-            audioTrack.pause() // Pause the audio
-            audioTrack.src = '' // Clear the src attribute
-            audioTrack.load() // Load the audio to unload it
-            audioTrack = null // Nullify the audio object
+            audioTrack.pause()
+            audioTrack.src = ''
+            audioTrack.load()
+            audioTrack = null
         }
         )
     }
-    audioTrackList = [] // Clear the audio elements array
+    document.getElementById('playPause').innerHTML = "▶"
+    audioTrackList = []
 
 }
 
@@ -193,12 +201,11 @@ function createAudioElements(fetchedStems) {
         })
         let objectUrl = URL.createObjectURL(blob)
         audioTrack.src = objectUrl
-        syncLoop(audioTrack)
+        audioTrack.addEventListener('ended', syncLoop)
     })
     let checkIfReady = setInterval(() => {
         if (numReady == audioTrackList.length) {
             audioTrackList.forEach((audioTrack) => {
-                audioTrack.play()
                 audioTrack.volume = getMasterVolume();
                 disableControls(false)
             })
@@ -237,13 +244,33 @@ function createVolumeSliders(fetchedStems) {
         container.appendChild(sliderContainer)
     })
 }
-function syncLoop(audioTrack) {
-    audioTrack.addEventListener('ended', () => {
-        audioTrackList.forEach((audioTrack) => {
-            audioTrack.load()
-            audioTrack.play()
-        })
+function syncLoop() {
+    audioTrackList.forEach((audioTrack) => {
+        audioTrack.load()
+        audioTrack.play()
     })
+}
+function syncAtCurrentPlayTime() {
+    let syncTo = audioTrackList[0].currentTime
+    audioTrackList.forEach((audio) => {
+        audio.currentTime = syncTo
+    })
+}
+function togglePlayPauseAllTracks(playPauseElement) {
+    let isAnyTrackPlaying = audioTrackList.some((audio) => !audio.paused);
+
+    if (isAnyTrackPlaying) {
+        audioTrackList.forEach((audio) => {
+            audio.pause();
+            playPauseElement.innerHTML = "▶"
+        });
+        syncAtCurrentPlayTime();
+    } else {
+        audioTrackList.forEach((audio) => {
+            audio.play();
+            playPauseElement.innerHTML = "⏸"
+        });
+    }
 }
 function changeAudioTrackVolume(trackIndex, trackVolume) {
     let masterVolume = getMasterVolume()
