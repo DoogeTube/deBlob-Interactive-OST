@@ -4,7 +4,7 @@
     --accent-color: #600000;
 }
 
-canvas {
+#cursorTrailCanvas {
     position: fixed;
     top: 0;
     left: 0;
