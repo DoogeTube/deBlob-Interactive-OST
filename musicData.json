@@ -3224,7 +3224,7 @@
                         "medium 2" : [0, 1]
                     },
                     {
-                        "high" : [0, 1, 2]
+                        "high" : [0, 1, 2, 3]
                     }
                 ],
                 "colors": {
@@ -3525,7 +3525,23 @@
                     "low 1.flac",
                     "low 2.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                    "low 1" : [4]
+                    },
+                    {
+                        "low 2" : [4, 5]
+                    },
+                    {
+                        "medium 1" : [5, 0]
+                    },
+                    {
+                        "medium 2" : [0, 1]
+                    },
+                    {
+                        "high" : [0, 1, 2, 3]
+                    }
+                ],
                 "colors": {
                     "blue": [
                         "clav aflat 01.flac",
@@ -3804,7 +3820,23 @@
                     "low 1.flac",
                     "low 2.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                    "low 1" : [3]
+                    },
+                    {
+                        "low 2" : [3, 4]
+                    },
+                    {
+                        "medium 1" : [4, 0]
+                    },
+                    {
+                        "medium 2" : [0, 1]
+                    },
+                    {
+                        "high" : [0, 1, 2]
+                    }
+                ],
                 "colors": {
                     "blue": [
                         "guit a7 01.flac",
