@@ -247,6 +247,8 @@ function syncLoop(audioTrack) {
 }
 function changeAudioTrackVolume(trackIndex, trackVolume){
     let masterVolume = getMasterVolume()
+    trackSliderElement = document.getElementById('stemSlider' + trackIndex)
+    trackSliderElement.value = trackVolume
     audioTrackVolumeList[trackIndex] = trackVolume
     audioTrackList[trackIndex].volume = trackVolume * masterVolume
 }
@@ -314,9 +316,9 @@ function applyPreset(selectedPresetObject){
     let selectedPresetArray = Object.values(selectedPresetObject)[0]
     audioTrackList.forEach((audio, index) => {
         if (selectedPresetArray.includes(index)) {
-        audio.volume = parseFloat((audioTrackVolumeList[index] * 1.0) * (getMasterVolume()))
+        changeAudioTrackVolume(index, 1)
         } else {
-            audio.volume = 0
+            changeAudioTrackVolume(index, 0)
         }
     })
 }
