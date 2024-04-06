@@ -33,7 +33,7 @@ async function setup() {
         changePreset(presetSliderElement, selectedPreset)
     })
     masterVolumeSliderElement.addEventListener('input', function () {
-        changeVolume(getMasterVolume())
+        changeMasterVolume(getMasterVolume())
     })
 }
 function disableControls(boolean) {
@@ -229,8 +229,7 @@ function createVolumeSliders(fetchedStems) {
         slider.id = 'stemSlider' + index
 
         slider.addEventListener('input', () => {
-            audioTrackVolumeList[index] = slider.value
-            changeVolume(getMasterVolume())
+            changeAudioTrackVolume(index, slider.value)
         })
 
         sliderContainer.appendChild(label)
@@ -246,10 +245,14 @@ function syncLoop(audioTrack) {
         })
     })
 }
-function changeVolume(masterVolume) {
+function changeAudioTrackVolume(trackIndex, trackVolume){
+    let masterVolume = getMasterVolume()
+    audioTrackVolumeList[trackIndex] = trackVolume
+    audioTrackList[trackIndex].volume = trackVolume * masterVolume
+}
+function changeMasterVolume(masterVolume) {
     audioTrackList.forEach((audio, index) => {
         audio.volume = parseFloat((audioTrackVolumeList[index] * 1.0) * (masterVolume))
-        console.log(parseFloat((audioTrackVolumeList[index] * 1.0) * (masterVolume)))
     })
 }
 function getMasterVolume() {
