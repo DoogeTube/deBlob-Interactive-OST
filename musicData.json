@@ -305,11 +305,33 @@
                     "funky-forte-1.flac",
                     "funky-forte-2.flac",
                     "funky-forte-3.flac",
-                    "funky-inked-1.flac",
                     "funky-mezzo-1.flac",
-                    "funky-mezzo-2.flac"
+                    "funky-mezzo-2.flac",
+                    "funky-inked-1.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                        "none": [0, 1, 2, 3, 4, 5]
+                    },
+                    {
+                        "inked": [5]
+                    },
+                    {
+                        "low 1": [3]
+                    },
+                    {
+                        "low 2": [3, 4]
+                    },
+                    {
+                        "medium 1": [0, 3, 4]
+                    },
+                    {
+                        "medium 2": [4, 0, 1]
+                    },
+                    {
+                        "high": [0, 1, 2]
+                    }
+                ],
                 "colors": {
                     "blue": [
                         "funk1 guit bflat 01.flac",
@@ -493,11 +515,33 @@
                     "unstoppable-forte-1.flac",
                     "unstoppable-forte-2.flac",
                     "unstoppable-forte-3.flac",
-                    "unstoppable-inked-1.flac",
                     "unstoppable-mezzo-1.flac",
-                    "unstoppable-mezzo-2.flac"
+                    "unstoppable-mezzo-2.flac",
+                    "unstoppable-inked-1.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                        "none": [0, 1, 2, 3, 4, 5]
+                    },
+                    {
+                        "inked": [5]
+                    },
+                    {
+                        "low 1": [3]
+                    },
+                    {
+                        "low 2": [3, 4]
+                    },
+                    {
+                        "medium 1": [0, 3, 4]
+                    },
+                    {
+                        "medium 2": [4, 0, 1]
+                    },
+                    {
+                        "high": [0, 1, 2]
+                    }
+                ],
                 "colors": {
                     "blue": [
                         "funk2 guit bflat 01.flac",
@@ -720,11 +764,33 @@
                     "righteous-forte-1.flac",
                     "righteous-forte-2.flac",
                     "righteous-forte-3.flac",
-                    "righteous-inked-1.flac",
                     "righteous-mezzo-1.flac",
-                    "righteous-mezzo-2.flac"
+                    "righteous-mezzo-2.flac",
+                    "righteous-inked-1.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                        "none": [0, 1, 2, 3, 4, 5]
+                    },
+                    {
+                        "inked": [5]
+                    },
+                    {
+                        "low 1": [3]
+                    },
+                    {
+                        "low 2": [3, 4]
+                    },
+                    {
+                        "medium 1": [0, 3, 4]
+                    },
+                    {
+                        "medium 2": [4, 0, 1]
+                    },
+                    {
+                        "high": [0, 1, 2]
+                    }
+                ],
                 "colors": {
                     "blue": [
                         "guitar bflat 01.flac",
@@ -955,11 +1021,33 @@
                     "euphoric-forte-1.flac",
                     "euphoric-forte-2.flac",
                     "euphoric-forte-3.flac",
-                    "euphoric-inked-1.flac",
                     "euphoric-mezzo.flac",
-                    "euphoric-piano.flac"
+                    "euphoric-piano.flac",
+                    "euphoric-inked-1.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                        "none": [0, 1, 2, 3, 4, 5]
+                    },
+                    {
+                        "inked": [5]
+                    },
+                    {
+                        "low 1": [3]
+                    },
+                    {
+                        "low 2": [3, 4]
+                    },
+                    {
+                        "medium 1": [0, 3, 4]
+                    },
+                    {
+                        "medium 2": [4, 0, 1]
+                    },
+                    {
+                        "high": [0, 1, 2, 4]
+                    }
+                ],
                 "colors": {
                     "black": [
                         "black-c.flac",
@@ -1189,12 +1277,34 @@
                     "smooth-forte-1.flac",
                     "smooth-forte-2.flac",
                     "smooth-forte-3.flac",
-                    "smooth-inked-1.flac",
-                    "smooth-inked-2.flac",
                     "smooth-mezzo-1.flac",
-                    "smooth-mezzo-2.flac"
+                    "smooth-mezzo-2.flac",
+                    "smooth-inked-1.flac",
+                    "smooth-inked-2.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                        "none": [0, 1, 2, 3, 4, 5]
+                    },
+                    {
+                        "inked": [5, 6]
+                    },
+                    {
+                        "low 1": [3]
+                    },
+                    {
+                        "low 2": [3, 4]
+                    },
+                    {
+                        "medium 1": [0, 3, 4]
+                    },
+                    {
+                        "medium 2": [3, 4, 0, 1]
+                    },
+                    {
+                        "high": [0, 1, 2, 4]
+                    }
+                ],
                 "colors": {
                     "black": [
                         "m09-black-c.flac",
@@ -1466,11 +1576,33 @@
                     "fearless-forte-1.flac",
                     "fearless-forte-2.flac",
                     "fearless-forte-3.flac",
-                    "fearless-inked-1.flac",
                     "fearless-mezzo-1.flac",
-                    "fearless-mezzo-2.flac"
+                    "fearless-mezzo-2.flac",
+                    "fearless-inked-1.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                        "none": [0, 1, 2, 3, 4, 5]
+                    },
+                    {
+                        "inked": [5]
+                    },
+                    {
+                        "low 1": [3]
+                    },
+                    {
+                        "low 2": [3, 4]
+                    },
+                    {
+                        "medium 1": [0, 3, 4]
+                    },
+                    {
+                        "medium 2": [4, 0, 1]
+                    },
+                    {
+                        "high": [0, 1, 2]
+                    }
+                ],
                 "colors": {
                     "black": [
                         "m04-black-c.flac",
@@ -1736,11 +1868,33 @@
                     "defiant-forte-1.flac",
                     "defiant-forte-2.flac",
                     "defiant-forte-3.flac",
-                    "defiant-inked-1.flac",
                     "defiant-mezzo-1.flac",
-                    "defiant-mezzo-2.flac"
+                    "defiant-mezzo-2.flac",
+                    "defiant-inked-1.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                        "none": [0, 1, 2, 3, 4, 5]
+                    },
+                    {
+                        "inked": [5]
+                    },
+                    {
+                        "low 1": [3]
+                    },
+                    {
+                        "low 2": [3, 4]
+                    },
+                    {
+                        "medium 1": [0, 3, 4]
+                    },
+                    {
+                        "medium 2": [4, 0, 1]
+                    },
+                    {
+                        "high": [0, 1, 2, 4]
+                    }
+                ],
                 "colors": {
                     "black": [
                         "m03-black-c.flac",
@@ -1976,11 +2130,33 @@
                     "brazen-forte-1.flac",
                     "brazen-forte-2.flac",
                     "brazen-forte-3.flac",
-                    "brazen-inked-1.flac",
                     "brazen-mezzo-1.flac",
-                    "brazen-mezzo-2.flac"
+                    "brazen-mezzo-2.flac",
+                    "brazen-inked-1.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                        "none": [0, 1, 2, 3, 4, 5]
+                    },
+                    {
+                        "inked": [5]
+                    },
+                    {
+                        "low 1": [3]
+                    },
+                    {
+                        "low 2": [3, 4]
+                    },
+                    {
+                        "medium 1": [0, 3, 4]
+                    },
+                    {
+                        "medium 2": [4, 0, 1]
+                    },
+                    {
+                        "high": [0, 1, 2]
+                    }
+                ],
                 "colors": {
                     "black": [
                         "m06-black-c.flac",
@@ -2270,7 +2446,29 @@
                     "revolutionary-forte-5.flac",
                     "revolutionary-inked-1.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                        "none": [0, 1, 2, 3, 4, 5]
+                    },
+                    {
+                        "inked": [5]
+                    },
+                    {
+                        "low 1": [0]
+                    },
+                    {
+                        "low 2": [0, 1]
+                    },
+                    {
+                        "medium 1": [0, 1, 2]
+                    },
+                    {
+                        "medium 2": [0, 1, 2, 3]
+                    },
+                    {
+                        "high": [0, 1, 2, 3, 4]
+                    }
+                ],
                 "colors": {
                     "black": [
                         "m08-black-c.flac",
@@ -2542,11 +2740,33 @@
                     "victorious-forte-1.flac",
                     "victorious-forte-2.flac",
                     "victorious-forte-3.flac",
-                    "victorious-inked-1.flac",
                     "victorious-mezzo-1.flac",
-                    "victorious-mezzo-2.flac"
+                    "victorious-mezzo-2.flac",
+                    "victorious-inked-1.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                        "none": [0, 1, 2, 3, 4, 5]
+                    },
+                    {
+                        "inked": [5]
+                    },
+                    {
+                        "low 1": [3]
+                    },
+                    {
+                        "low 2": [3, 4]
+                    },
+                    {
+                        "medium 1": [0, 4]
+                    },
+                    {
+                        "medium 2": [0, 1]
+                    },
+                    {
+                        "high": [0, 1, 2]
+                    }
+                ],
                 "colors": {
                     "black": [
                         "black-c.flac",
@@ -2819,12 +3039,34 @@
                 "stems": [
                     "energetic-forte-1.flac",
                     "energetic-forte-2.flac",
-                    "energetic-inked-1.flac",
                     "energetic-mezzo-1.flac",
                     "energetic-mezzo-2.flac",
-                    "energetic-mezzo-3.flac"
+                    "energetic-mezzo-3.flac",
+                    "energetic-inked-1.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                        "none": [0, 1, 2, 3, 4, 5]
+                    },
+                    {
+                        "inked": [5]
+                    },
+                    {
+                        "low 1": [2]
+                    },
+                    {
+                        "low 2": [2, 3]
+                    },
+                    {
+                        "medium 1": [2, 3, 4]
+                    },
+                    {
+                        "medium 2": [3, 4, 0]
+                    },
+                    {
+                        "high": [4, 0, 1]
+                    }
+                ],
                 "colors": {
                     "agogo": [
                         "agogo-01.flac",
@@ -2968,7 +3210,23 @@
                     "low 1.flac",
                     "low 2.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                    "low 1" : [4]
+                    },
+                    {
+                        "low 2" : [4, 5]
+                    },
+                    {
+                        "medium 1" : [5, 0]
+                    },
+                    {
+                        "medium 2" : [0, 1]
+                    },
+                    {
+                        "high" : [0, 1, 2]
+                    }
+                ],
                 "colors": {
                     "blue": [
                         "guitar a7 01.flac",
