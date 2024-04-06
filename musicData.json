@@ -3224,8 +3224,12 @@
                         "medium 2" : [0, 1]
                     },
                     {
-                        "high" : [0, 1, 2, 3]
+                        "high 1" : [0, 1, 2]
+                    },
+                    {
+                        "high 2":[0, 1, 2, 3]
                     }
+
                 ],
                 "colors": {
                     "blue": [
@@ -4099,7 +4103,26 @@
                     "low 1.flac",
                     "low 2.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                    "low 1" : [4]
+                    },
+                    {
+                        "low 2" : [4, 5]
+                    },
+                    {
+                        "medium 1" : [5, 0]
+                    },
+                    {
+                        "medium 2" : [0, 1]
+                    },
+                    {
+                        "high 1" : [0, 1, 2]
+                    },
+                    {
+                        "high 2" : [0, 1, 2, 3]
+                    }
+                ],
                 "colors": {
                     "blue": [
                         "clav c 01.flac",
@@ -4327,7 +4350,26 @@
                     "low 1.flac",
                     "low 2.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                    "low 1" : [4]
+                    },
+                    {
+                        "low 2" : [4, 5]
+                    },
+                    {
+                        "medium 1" : [5, 0]
+                    },
+                    {
+                        "medium 2" : [0, 1]
+                    },
+                    {
+                        "high 1" : [0, 1, 2]
+                    },
+                    {
+                        "high 2" : [0, 1, 2, 3]
+                    }
+                ],
                 "colors": {
                     "blue": [
                         "guit aflat 01.flac",
@@ -4595,7 +4637,26 @@
                     "low 1.flac",
                     "low 2.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                    "low 1" : [4]
+                    },
+                    {
+                        "low 2" : [4, 5]
+                    },
+                    {
+                        "medium 1" : [5, 0]
+                    },
+                    {
+                        "medium 2" : [0, 1]
+                    },
+                    {
+                        "high 1" : [0, 1, 2]
+                    },
+                    {
+                        "high 2" : [0, 1, 2, 3]
+                    }
+                ],
                 "colors": {
                     "blue": [
                         "guitar a7 01.flac",
@@ -4853,7 +4914,23 @@
                     "low 1.flac",
                     "low 2.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                    "low 1" : [3]
+                    },
+                    {
+                        "low 2" : [3, 4]
+                    },
+                    {
+                        "medium 1" : [4, 0]
+                    },
+                    {
+                        "medium 2" : [0, 1]
+                    },
+                    {
+                        "high" : [0, 1, 2]
+                    }
+                ],
                 "colors": {
                     "blue": [
                         "guit a7 01.flac",
@@ -5195,7 +5272,26 @@
                     "low 2.flac",
                     "low 3.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                        "low 1": [3]
+                    },
+                    {
+                        "low 2": [3, 4]
+                    },
+                    {
+                        "low 3": [3, 4, 5]
+                    },
+                    {
+                        "medium 1":[5, 0]
+                    },
+                    {
+                        "medium 2":[0, 1]
+                    },
+                    {
+                        "high":[0, 1, 2]
+                    }
+                ],
                 "colors": {
                     "blue": [
                         "guitar bfflat 01.flac",
@@ -5449,7 +5545,23 @@
                     "low 1.flac",
                     "low 2.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                        "low 1": [3]
+                    },
+                    {
+                        "low 2": [3, 4]
+                    },
+                    {
+                        "medium 1":[4, 0]
+                    },
+                    {
+                        "medium 2":[0, 1]
+                    },
+                    {
+                        "high":[0, 1, 2]
+                    }
+                ],
                 "colors": {
                     "blue": [
                         "guitar c 01.flac",
@@ -5659,7 +5771,23 @@
                     "low 1.flac",
                     "low 2.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                        "low 1": [3]
+                    },
+                    {
+                        "low 2": [3, 4]
+                    },
+                    {
+                        "medium 1":[4, 0]
+                    },
+                    {
+                        "medium 2":[0, 1]
+                    },
+                    {
+                        "high":[0, 1, 2]
+                    }
+                ],
                 "colors": {
                     "blue": [
                         "guit ab7 01.flac",
@@ -5915,7 +6043,26 @@
                     "low 1.flac",
                     "low 2.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                    "low 1" : [4]
+                    },
+                    {
+                        "low 2" : [4, 5]
+                    },
+                    {
+                        "medium 1" : [5, 0]
+                    },
+                    {
+                        "medium 2" : [0, 1]
+                    },
+                    {
+                        "high 1" : [0, 1, 2]
+                    },
+                    {
+                        "high 2" : [0, 1, 2, 3]
+                    }
+                ],
                 "colors": {
                     "blue": [
                         "guitar a 01.flac",
@@ -6109,7 +6256,26 @@
                     "low 1.flac",
                     "low 2.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                    "low 1" : [4]
+                    },
+                    {
+                        "low 2" : [4, 5]
+                    },
+                    {
+                        "medium 1" : [5, 0]
+                    },
+                    {
+                        "medium 2" : [0, 1]
+                    },
+                    {
+                        "high 1" : [0, 1, 2]
+                    },
+                    {
+                        "high 2" : [0, 1, 2, 3]
+                    }
+                ],
                 "colors": {
                     "blue": [
                         "guitar a 01.flac",
@@ -6345,7 +6511,29 @@
                     "low 1.flac",
                     "low 2.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                    "low 1" : [5]
+                    },
+                    {
+                        "low 2" : [5, 6]
+                    },
+                    {
+                        "medium 1" : [6, 0]
+                    },
+                    {
+                        "medium 2" : [0, 1]
+                    },
+                    {
+                        "high 1" : [0, 1, 2]
+                    },
+                    {
+                        "high 2" : [0, 1, 2, 3]
+                    },
+                    {
+                        "high 3": [0, 1, 2, 3, 4]
+                    }
+                ],
                 "colors": {
                     "blue": [
                         "bass aflat 01.flac",
@@ -6717,7 +6905,20 @@
                     "low 1.flac",
                     "low 2.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                        "inked" : [1]
+                    },
+                    {
+                        "low": [1,2]
+                    },
+                    {
+                        "medium": [1,2,3]
+                    },
+                    {
+                        "high":[0,1,2,3]
+                    }
+                ],
                 "colors": {
                     "blue": [
                         "guitar aflat 01.flac",
@@ -6992,7 +7193,23 @@
                     "low 1.flac",
                     "low 2.flac"
                 ],
-                "variations": [],
+                "variations": [
+                    {
+                        "low 1": [3]
+                    },
+                    {
+                        "low 2": [3,4]
+                    },
+                    {
+                        "medium 1": [4,0]
+                    },
+                    {
+                        "medium 2": [4,0,1]
+                    },
+                    {
+                        "high":[0,1,2]
+                    }
+                ],
                 "colors": {}
             }
         ]
