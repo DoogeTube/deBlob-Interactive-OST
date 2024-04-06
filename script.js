@@ -366,8 +366,15 @@ function applyPreset(selectedPresetObject) { // duration in milliseconds
     }
     audioTrackList.forEach((audio, index) => {
         if (selectedPresetArray.includes(index)) {
-            lerpVolume(index, 1)
-        } else {
+            if (audio.paused) {
+                changeAudioTrackVolume(index, 1)
+            } else {
+                lerpVolume(index, 1)
+            }
+        } else if (audio.paused) {
+            changeAudioTrackVolume(index, 0)
+        }
+        else {
             lerpVolume(index, 0)
         }
     })
