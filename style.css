@@ -11,6 +11,7 @@
     pointer-events: none;
     z-index: -1;
 }
+
 * {
     cursor: url('images/cursor.cur'), auto;
 }
@@ -58,16 +59,19 @@ label {
 
 #gameAndMood {
     display: flex;
+    overflow: auto;
 }
 
 #gameAndMood button {
-    box-sizing:content-box;
+    box-sizing: content-box;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 30px;
-    overflow:hidden;
+    overflow: hidden;
     text-align: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 #gameAndMood select {
@@ -234,10 +238,12 @@ button:active {
     color: #1D998F;
     scale: 100%;
 }
+
 button:disabled {
     opacity: 75%;
     scale: 100%;
 }
+
 .sliderContainer label {
     display: inline-block;
     width: 200px;
@@ -256,7 +262,7 @@ button:disabled {
 @media (max-aspect-ratio: 1/1) {
     main {
         margin: 0px;
-        max-width: 100vh;
+        width: 100%;
         border-radius: 0px;
     }
 }
