@@ -245,7 +245,7 @@ function syncLoop(audioTrack) {
         })
     })
 }
-function changeAudioTrackVolume(trackIndex, trackVolume){
+function changeAudioTrackVolume(trackIndex, trackVolume) {
     let masterVolume = getMasterVolume()
     trackSliderElement = document.getElementById('stemSlider' + trackIndex)
     trackSliderElement.value = trackVolume
@@ -312,13 +312,36 @@ function changePreset(presetSliderElement, selectedPreset) {
     label.textContent = `preset: ${Object.keys(selectedPresetObject)[0]}`
     applyPreset(selectedPresetObject)
 }
-function applyPreset(selectedPresetObject){
-    let selectedPresetArray = Object.values(selectedPresetObject)[0]
+function applyPreset(selectedPresetObject) { // duration in milliseconds
+    let selectedPresetArray = Object.values(selectedPresetObject)[0];
+
+    function lerpVolume(index, targetVolume, duration = 2000) {
+        let startVolume = audioTrackVolumeList[index]
+        let startTime = Date.now()
+
+        function lerp(start, end, t) {
+            return start + (end - start) * t
+        }
+
+        function updateVolume() {
+            let currentTime = Date.now() - startTime
+            let t = currentTime / duration
+
+            if (t <= 1) {
+                let newVolume = lerp(startVolume, targetVolume, t)
+                changeAudioTrackVolume(index, newVolume)
+                requestAnimationFrame(updateVolume)
+            } else {
+                changeAudioTrackVolume(index, targetVolume)
+            }
+        }
+        updateVolume()
+    }
     audioTrackList.forEach((audio, index) => {
         if (selectedPresetArray.includes(index)) {
-        changeAudioTrackVolume(index, 1)
+            lerpVolume(index, 1)
         } else {
-            changeAudioTrackVolume(index, 0)
+            lerpVolume(index, 0)
         }
     })
 }
