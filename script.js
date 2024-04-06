@@ -43,7 +43,7 @@ function disableControls(boolean) {
     gameSelectorElement.disabled = boolean
 }
 //global variables to remove
-var OpresetList = []
+var presetListObject = []
 var fetchedSounds = []
 let audioTrackList = []
 let audioTrackVolumeList = []
@@ -103,9 +103,9 @@ function killaudioTrackList() {
 //#region Fetch Stems
 function fetchStems(selectedGame, selectedMood) {
     disableControls(true)
-    let OmoodList = musicData[selectedGame].moods
-    let selectedMoodObject = OmoodList.find(mood => mood.name === selectedMood)
-    let formattedMoodIndex = String(OmoodList.indexOf(selectedMoodObject) + 1).padStart(2, '0')
+    let moodListObject = musicData[selectedGame].moods
+    let selectedMoodObject = moodListObject.find(mood => mood.name === selectedMood)
+    let formattedMoodIndex = String(moodListObject.indexOf(selectedMoodObject) + 1).padStart(2, '0')
     let stemNames = selectedMoodObject.stems
     let fetchedStems = []
     return new Promise((resolve, reject) => {
@@ -139,9 +139,9 @@ function fetchStems(selectedGame, selectedMood) {
 }
 function fetchSounds(selectedGame, selectedMood) {
     disableControls(true)
-    let OmoodList = musicData[selectedGame].moods
-    let selectedMoodObject = OmoodList.find(mood => mood.name === selectedMood)
-    let formattedMoodIndex = String(OmoodList.indexOf(selectedMoodObject) + 1).padStart(2, '0')
+    let moodListObject = musicData[selectedGame].moods
+    let selectedMoodObject = moodListObject.find(mood => mood.name === selectedMood)
+    let formattedMoodIndex = String(moodListObject.indexOf(selectedMoodObject) + 1).padStart(2, '0')
     let colorNames = Object.keys(selectedMoodObject.colors)
 
     var soundPromise = new Promise((resolve, reject) => {
@@ -268,8 +268,8 @@ function paint() {
     let selectedGame = document.getElementById('gameSelector').value
     let selectedMood = document.getElementById('moodSelector').value
     let selectedColor = document.getElementById('colorSelector').value
-    let OmoodList = musicData[selectedGame].moods
-    let selectedMoodObject = OmoodList.find(mood => mood.name === selectedMood)
+    let moodListObject = musicData[selectedGame].moods
+    let selectedMoodObject = moodListObject.find(mood => mood.name === selectedMood)
     let availableSoundNames = []
     if (selectedColor == "rainbow") {
         let allSoundNames = selectedMoodObject.colors["red"].concat(selectedMoodObject.colors["yellow"]).concat(selectedMoodObject.colors["blue"]).concat(selectedMoodObject.colors["orange"]).concat(selectedMoodObject.colors["green"]).concat(selectedMoodObject.colors["purple"]).concat(selectedMoodObject.colors["brown"])
@@ -290,14 +290,14 @@ function paint() {
     paintAudio.volume = getMasterVolume()
 }
 function findPresets(selectedGame, selectedMood) {
-    OpresetList = []
+    presetListObject = []
     let presetSliderElement = document.getElementById('presetSlider')
     let presetSliderContainerElement = document.getElementById('presetSliderContainer')
-    let OmoodList = musicData[selectedGame].moods
-    let selectedMoodObject = OmoodList.find(mood => mood.name === selectedMood)
-    OpresetList = selectedMoodObject.variations
-    presetSliderElement.max = OpresetList.length - 1
-    if (OpresetList.length == 0) {
+    let moodListObject = musicData[selectedGame].moods
+    let selectedMoodObject = moodListObject.find(mood => mood.name === selectedMood)
+    presetListObject = selectedMoodObject.variations
+    presetSliderElement.max = presetListObject.length - 1
+    if (presetListObject.length == 0) {
         presetSliderContainerElement.style = "display:none"
     } else {
         changePreset(presetSliderElement, presetSliderElement.value)
@@ -305,7 +305,7 @@ function findPresets(selectedGame, selectedMood) {
     }
 }
 function changePreset(presetSliderElement, selectedPreset) {
-    let selectedPresetObject = OpresetList[selectedPreset]
+    let selectedPresetObject = presetListObject[selectedPreset]
     let label = findLabelForControl(presetSliderElement)
     label.textContent = `preset: ${Object.keys(selectedPresetObject)[0]}`
     applyPreset(selectedPresetObject)
