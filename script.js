@@ -184,7 +184,10 @@ function blobToArrayBuffer(blob) {
 }
 async function createAudioElements(fetchedStems) {
     stemAudioContext.close().then(async () => {
-        stemAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+        stemAudioContext = new (window.AudioContext || window.webkitAudioContext)({
+            sampleRate: 32000,
+            latencyHint: "playback"
+        });
         stemAudioContext.suspend();
         masterGainNode = stemAudioContext.createGain();
         masterGainNode.connect(stemAudioContext.destination);
@@ -204,6 +207,8 @@ async function createAudioElements(fetchedStems) {
                 gainNode.gain.value = 1;
 
                 source.buffer = audioBuffer;
+                console.log(audioBuffer)
+                source.loop = true;
                 source.connect(gainNode);
                 gainNode.connect(masterGainNode);
                 source.start();
