@@ -183,37 +183,39 @@ function blobToArrayBuffer(blob) {
     });
 }
 async function createAudioElements(fetchedStems) {
-    stemAudioContext.close();
-    stemAudioContext = new (window.AudioContext || window.webkitAudioContext)();
-    stemAudioContext.suspend();
-    masterGainNode = stemAudioContext.createGain();
-    masterGainNode.connect(stemAudioContext.destination);
-    masterGainNode.gain.value = document.getElementById('masterVolumeSlider').value
+    stemAudioContext.close().then(async () => {
+        stemAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+        stemAudioContext.suspend();
+        masterGainNode = stemAudioContext.createGain();
+        masterGainNode.connect(stemAudioContext.destination);
+        masterGainNode.gain.value = document.getElementById('masterVolumeSlider').value;
+        trackGainNodes = [];
 
-    for (let stemIndex = 0; stemIndex < fetchedStems.length; stemIndex++) {
-        let stemBlob = fetchedStems[stemIndex].blob;
+        for (let stemIndex = 0; stemIndex < fetchedStems.length; stemIndex++) {
+            let stemBlob = fetchedStems[stemIndex].blob;
 
-        try {
-            let arrayBuffer = await blobToArrayBuffer(stemBlob);
-            let audioBuffer = await stemAudioContext.decodeAudioData(arrayBuffer);
+            try {
+                let arrayBuffer = await blobToArrayBuffer(stemBlob);
+                let audioBuffer = await stemAudioContext.decodeAudioData(arrayBuffer);
 
-            let source = stemAudioContext.createBufferSource();
-            let gainNode = stemAudioContext.createGain();
-            trackGainNodes.push(gainNode);
-            gainNode.gain.value = 1;
+                let source = stemAudioContext.createBufferSource();
+                let gainNode = stemAudioContext.createGain();
+                trackGainNodes.push(gainNode);
+                gainNode.gain.value = 1;
 
-            source.buffer = audioBuffer;
-            source.connect(gainNode);
-            gainNode.connect(masterGainNode);
-            source.start();
+                source.buffer = audioBuffer;
+                source.connect(gainNode);
+                gainNode.connect(masterGainNode);
+                source.start();
 
-        } catch (error) {
-            console.error("Error decoding audio data:", error);
+            } catch (error) {
+                console.error("Error decoding audio data:", error);
+            }
         }
-    }
 
-    disableControls(false);
-    createVolumeSliders(fetchedStems);
+        disableControls(false);
+        createVolumeSliders(fetchedStems);
+    })
 }
 
 
@@ -250,14 +252,14 @@ function createVolumeSliders(fetchedStems) {
 }
 
 function changeAudioTrackVolume(index, volume) {
-    let stemSliderElement = document.getElementById('stemSlider' + index)
-    stemSliderElement.value = volume
-    trackGainNodes[index].gain.setValueAtTime(volume, stemAudioContext.currentTime)
+    trackGainNodes[index].gain.setValueAtTime(volume, stemAudioContext.currentTime);
+    let stemSliderElement = document.getElementById('stemSlider' + index);
+    stemSliderElement.value = volume;
 }
 function lerpAudioTrackVolume(index, volume, lerpLength = 1) {
-    let stemSliderElement = document.getElementById('stemSlider' + index)
-    stemSliderElement.value = volume
-    trackGainNodes[index].gain.linearRampToValueAtTime(volume, (stemAudioContext.currentTime + lerpLength))
+    trackGainNodes[index].gain.linearRampToValueAtTime(volume, (stemAudioContext.currentTime + lerpLength));
+    let stemSliderElement = document.getElementById('stemSlider' + index);
+    stemSliderElement.value = volume;
 }
 function togglePlayPauseAllTracks(playPauseElement) {
     switch (stemAudioContext.state) {
