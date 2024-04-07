@@ -34,7 +34,7 @@ async function setup() {
         changePreset(presetSliderElement, selectedPreset)
     })
     masterVolumeSliderElement.addEventListener('input', function () {
-        changeMasterVolume(getMasterVolume())
+        masterGainNode.gain.setValueAtTime(masterVolumeSliderElement.value, stemAudioContext.currentTime)
     })
     playPauseElement.addEventListener('click', function () {
         togglePlayPauseAllTracks(playPauseElement)
@@ -50,12 +50,11 @@ function disableControls(boolean) {
     playPauseElement.disabled = boolean
     syncButtonElement.disabled = boolean
 }
-//global variables to remove
 var presetListObject = []
 var fetchedSounds = []
-let audioTrackList = []
-let audioTrackVolumeList = []
-/////////////////////////////
+let trackGainNodes = [];
+let masterGainNode;
+let stemAudioContext = new (window.AudioContext || window.webkitAudioContext)();
 randomColor()
 function randomColor() {
     let randomNumber = Math.floor(Math.random() * 360)
@@ -81,33 +80,17 @@ function changeGame(selectedGame) {
 }
 //#endregion
 function changeMood(selectedGame, selectedMood) {
-    killaudioTrackList()
     fetchStems(selectedGame, selectedMood)
         .then(fetchedStems => {
             createAudioElements(fetchedStems);
         })
         .catch(error => {
-            alert("Error fetching stems:", error);
+            alert(`Couldn't create audio Elements \n${error}`);
             disableControls(false)
         });
     findPresets(selectedGame, selectedMood)
     fetchSounds(selectedGame, selectedMood)
 }
-function killaudioTrackList() {
-    if (audioTrackList.length !== 0) {
-        audioTrackList.forEach((audioTrack) => {
-            audioTrack.pause()
-            audioTrack.src = ''
-            audioTrack.load()
-            audioTrack = null
-        }
-        )
-    }
-    document.getElementById('playPause').innerHTML = "▶"
-    audioTrackList = []
-
-}
-
 //#region Fetch Stems
 function fetchStems(selectedGame, selectedMood) {
     disableControls(true)
@@ -117,27 +100,24 @@ function fetchStems(selectedGame, selectedMood) {
     let stemNames = selectedMoodObject.stems
     let fetchedStems = []
     return new Promise((resolve, reject) => {
-        let promises = stemNames.map((stemName) => {
-            return fetch(`Audio/${selectedGame}/Stems/${formattedMoodIndex}. ${selectedMood}/${stemName}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok')
-                    }
-                    return response.blob()
-                })
-                .then(blob => {
-                    fetchedStems.push({ blob, stemName })
-                    if (fetchedStems.length === stemNames.length) {
-                        fetchedStems.sort((a, b) => {
-                            return stemNames.indexOf(a.stemName) - stemNames.indexOf(b.stemName)
-                        })
-                        resolve(fetchedStems)
-                    }
-                })
-                .catch(error => {
-                    console.error(`Error fetching ${stemName} stem:`, error.message)
-                    reject(error)
-                })
+        let promises = stemNames.map(async (stemName) => {
+            try {
+                const response = await fetch(`Audio/${selectedGame}/Stems/${formattedMoodIndex}. ${selectedMood}/${stemName}`)
+                if (!response.ok) {
+                    throw new Error('Network response was not ok')
+                }
+                const blob = await response.blob()
+                fetchedStems.push({ blob, stemName })
+                if (fetchedStems.length === stemNames.length) {
+                    fetchedStems.sort((a, b) => {
+                        return stemNames.indexOf(a.stemName) - stemNames.indexOf(b.stemName)
+                    })
+                    resolve(fetchedStems)
+                }
+            } catch (error) {
+                console.error(`Error fetching ${stemName} stem:`, error.message)
+                reject(error)
+            }
         })
         Promise.all(promises)
             .catch(() => {
@@ -186,107 +166,113 @@ function fetchSounds(selectedGame, selectedMood) {
 
 //#endregion
 //#region Handle Audio Elements
-function createAudioElements(fetchedStems) {
-    audioTrackList = []
-    let numReady = 0
-    fetchedStems.forEach((item, index) => {
-        let blob = item.blob
-        audioTrackVolumeList[index] = 1.0
+function blobToArrayBuffer(blob) {
+    return new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
 
-        let audioTrack = new Audio()
-        audioTrackList.push(audioTrack)
+        fileReader.onload = function () {
+            const arrayBuffer = this.result;
+            resolve(arrayBuffer);
+        };
 
-        audioTrack.addEventListener("canplaythrough", () => {
-            numReady++
-        })
-        let objectUrl = URL.createObjectURL(blob)
-        audioTrack.src = objectUrl
-        audioTrack.addEventListener('ended', syncLoop)
-    })
-    let checkIfReady = setInterval(() => {
-        if (numReady == audioTrackList.length) {
-            audioTrackList.forEach((audioTrack) => {
-                audioTrack.volume = getMasterVolume();
-                disableControls(false)
-            })
-            clearInterval(checkIfReady)
-            createVolumeSliders(fetchedStems)
-        }
-    }, 10)
+        fileReader.onerror = function () {
+            reject(new Error("Error reading blob"));
+        };
+
+        fileReader.readAsArrayBuffer(blob);
+    });
 }
+async function createAudioElements(fetchedStems) {
+    stemAudioContext.close();
+    stemAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+    stemAudioContext.suspend();
+    masterGainNode = stemAudioContext.createGain();
+    masterGainNode.connect(stemAudioContext.destination);
+    masterGainNode.gain.value = document.getElementById('masterVolumeSlider').value
+
+    for (let stemIndex = 0; stemIndex < fetchedStems.length; stemIndex++) {
+        let stemBlob = fetchedStems[stemIndex].blob;
+
+        try {
+            let arrayBuffer = await blobToArrayBuffer(stemBlob);
+            let audioBuffer = await stemAudioContext.decodeAudioData(arrayBuffer);
+
+            let source = stemAudioContext.createBufferSource();
+            let gainNode = stemAudioContext.createGain();
+            trackGainNodes.push(gainNode);
+            gainNode.gain.value = 1;
+
+            source.buffer = audioBuffer;
+            source.connect(gainNode);
+            gainNode.connect(masterGainNode);
+            source.start();
+
+        } catch (error) {
+            console.error("Error decoding audio data:", error);
+        }
+    }
+
+    disableControls(false);
+    createVolumeSliders(fetchedStems);
+}
+
+
 
 function createVolumeSliders(fetchedStems) {
-    let container = document.getElementById('volumeSlidersContainer')
-    container.innerHTML = ''
+    let container = document.getElementById('volumeSlidersContainer');
+    container.innerHTML = '';
+
     fetchedStems.forEach((item, index) => {
-        let stemName = item.stemName
-        let sliderContainer = document.createElement('div')
-        sliderContainer.className = 'sliderContainer'
+        let stemName = item.stemName;
+        let sliderContainer = document.createElement('div');
+        sliderContainer.className = 'sliderContainer';
 
-        let label = document.createElement('label')
-        label.textContent = `${stemName}:` // Use stem name as label
+        let label = document.createElement('label');
+        label.textContent = `${stemName}:`;
 
-        let slider = document.createElement('input')
-        slider.type = 'range'
-        slider.min = 0
-        slider.max = 1
-        slider.step = 0.001
-        slider.value = 1
-        slider.className = 'slider'
-        slider.id = 'stemSlider' + index
+        let slider = document.createElement('input');
+        slider.type = 'range';
+        slider.min = 0;
+        slider.max = 1;
+        slider.step = 0.001;
+        slider.value = 1;
+        slider.className = 'slider';
+        slider.id = 'stemSlider' + index;
 
         slider.addEventListener('input', () => {
-            changeAudioTrackVolume(index, slider.value)
-        })
+            changeAudioTrackVolume(index, slider.value);
+        });
 
-        sliderContainer.appendChild(label)
-        sliderContainer.appendChild(slider)
-        container.appendChild(sliderContainer)
-    })
+        sliderContainer.appendChild(label);
+        sliderContainer.appendChild(slider);
+        container.appendChild(sliderContainer);
+    });
 }
-function syncLoop() {
-    audioTrackList.forEach((audioTrack) => {
-        audioTrack.load()
-        audioTrack.play()
-    })
+
+function changeAudioTrackVolume(index, volume) {
+    let stemSliderElement = document.getElementById('stemSlider' + index)
+    stemSliderElement.value = volume
+    trackGainNodes[index].gain.setValueAtTime(volume, stemAudioContext.currentTime)
 }
-function syncAtCurrentPlayTime() {
-    let syncTo = audioTrackList[0].currentTime
-    audioTrackList.forEach((audio) => {
-        audio.currentTime = syncTo
-    })
+function lerpAudioTrackVolume(index, volume, lerpLength = 1) {
+    let stemSliderElement = document.getElementById('stemSlider' + index)
+    stemSliderElement.value = volume
+    trackGainNodes[index].gain.linearRampToValueAtTime(volume, (stemAudioContext.currentTime + lerpLength))
 }
 function togglePlayPauseAllTracks(playPauseElement) {
-    let isAnyTrackPlaying = audioTrackList.some((audio) => !audio.paused);
-
-    if (isAnyTrackPlaying) {
-        audioTrackList.forEach((audio) => {
-            audio.pause();
+    switch (stemAudioContext.state) {
+        case 'running':
+            stemAudioContext.suspend()
             playPauseElement.innerHTML = "▶"
-        });
-        syncAtCurrentPlayTime();
-    } else {
-        audioTrackList.forEach((audio) => {
-            audio.play();
+            break;
+        case 'suspended':
+            stemAudioContext.resume()
             playPauseElement.innerHTML = "⏸"
-        });
+            break;
+        default:
+            alert(`pick a track before pressing play!`)
+            break;
     }
-}
-function changeAudioTrackVolume(trackIndex, trackVolume) {
-    let masterVolume = getMasterVolume()
-    trackSliderElement = document.getElementById('stemSlider' + trackIndex)
-    trackSliderElement.value = trackVolume
-    audioTrackVolumeList[trackIndex] = trackVolume
-    audioTrackList[trackIndex].volume = trackVolume * masterVolume
-}
-function changeMasterVolume(masterVolume) {
-    audioTrackList.forEach((audio, index) => {
-        audio.volume = parseFloat((audioTrackVolumeList[index] * 1.0) * (masterVolume))
-    })
-}
-function getMasterVolume() {
-    let masterVolume = document.getElementById('masterVolumeSlider').value
-    return masterVolume / 100
 }
 //#endregion
 //#region Color
@@ -342,40 +328,18 @@ function changePreset(presetSliderElement, selectedPreset) {
 function applyPreset(selectedPresetObject) { // duration in milliseconds
     let selectedPresetArray = Object.values(selectedPresetObject)[0];
 
-    function lerpVolume(index, targetVolume, duration = 2000) {
-        let startVolume = audioTrackVolumeList[index]
-        let startTime = Date.now()
-
-        function lerp(start, end, t) {
-            return start + (end - start) * t
-        }
-
-        function updateVolume() {
-            let currentTime = Date.now() - startTime
-            let t = currentTime / duration
-
-            if (t <= 1) {
-                let newVolume = lerp(startVolume, targetVolume, t)
-                changeAudioTrackVolume(index, newVolume)
-                requestAnimationFrame(updateVolume)
-            } else {
-                changeAudioTrackVolume(index, targetVolume)
-            }
-        }
-        updateVolume()
-    }
-    audioTrackList.forEach((audio, index) => {
+    trackGainNodes.forEach((node, index) => {
         if (selectedPresetArray.includes(index)) {
-            if (audio.paused) {
+            if (stemAudioContext.state === "suspended") {
                 changeAudioTrackVolume(index, 1)
             } else {
-                lerpVolume(index, 1)
+                lerpAudioTrackVolume(index, 1)
             }
-        } else if (audio.paused) {
+        } else if (stemAudioContext.state === "suspended") {
             changeAudioTrackVolume(index, 0)
         }
         else {
-            lerpVolume(index, 0)
+            lerpAudioTrackVolume(index, 0)
         }
     })
 }
@@ -387,4 +351,3 @@ function findLabelForControl(el) {
             return labels[i]
     }
 }
-//#endregion
