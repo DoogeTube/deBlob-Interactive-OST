@@ -1,5 +1,6 @@
 :root {
     --background-color: #f4f4f4;
+    --shadow-accent: #13615C;
     --shadow-color:#217872;
     --highlight-color:#44b0ac;
     --default-gradient: linear-gradient(var(--highlight-color), var(--shadow-color), var(--highlight-color));
@@ -131,7 +132,7 @@ select:disabled {
 
 /*#region Sliders*/
 .slider {
-    background: #13615C;
+    background: var(--shadow-accent);
     color: white;
     width: 100%;
     height: 30px;
@@ -142,7 +143,7 @@ select:disabled {
 }
 
 .slider::-moz-range-track {
-    background: #13615C;
+    background: var(--shadow-accent);
 }
 
 .slider::-moz-range-thumb {
@@ -232,7 +233,7 @@ button:hover {
 button:active {
     background: var(--shadow-color);
     border-radius: 12px;
-    border: 4px solid #fcab4900;
+    border-color: var(--shadow-accent);
     display: inline-block;
     color: var(--highlight-color);
     scale: 100%;
