@@ -304,7 +304,7 @@ function paint() {
 
     paintAudio.play()
 
-    paintAudio.volume = 0.8
+    paintAudio.volume = document.getElementById('masterVolumeSlider').value
 }
 function findPresets(selectedGame, selectedMood) {
     presetListObject = []
