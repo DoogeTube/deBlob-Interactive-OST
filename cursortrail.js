@@ -7,12 +7,11 @@ const pointer = {
     y: .5 * window.innerHeight,
 };
 const params = {
-    pointsNumber: 31,
-    widthFactor: 1,
+    pointsNumber: 64,
+    widthFactor: 0.5,
 };
 
 const points = [];
-const rate = 1000;
 
 window.addEventListener("click", e => {
     updateMousePosition(e.x, e.y);
@@ -41,9 +40,9 @@ setInterval(drawLines, 16.666);
 function addPoint() {
     let x = pointer.x
     let y = pointer.y
-    points.push({ x: x, y: y });
+    points.unshift({ x: x, y: y });
     if (points.length > params.pointsNumber) {
-        points.shift();
+        points.pop();
     }
 }
 
@@ -53,7 +52,7 @@ function drawLines() {
     addPoint()
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    ctx.globalAlpha = 0.1;
+    ctx.globalAlpha = 0.05;
     ctx.strokeStyle = "yellow";
 
     ctx.lineCap = "round";
@@ -66,8 +65,6 @@ function drawLines() {
         ctx.stroke();
     }
 }
-
-
 function setupCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
