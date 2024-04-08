@@ -58,9 +58,6 @@ function drawLines() {
 
     ctx.lineCap = "round";
     ctx.beginPath();
-
-    ctx.moveTo(points[0].x, points[0].y);
-
     for (let i = 1; i < points.length - 1; i++) {
         const xc = .5 * (points[i].x + points[i + 1].x);
         const yc = .5 * (points[i].y + points[i + 1].y);
@@ -68,9 +65,6 @@ function drawLines() {
         ctx.lineWidth = params.widthFactor * (i);
         ctx.stroke();
     }
-
-    ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
-    ctx.stroke();
 }
 
 
