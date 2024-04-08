@@ -15,18 +15,18 @@ const points = [];
 const rate = 1000;
 
 window.addEventListener("click", e => {
-    updateMousePosition(e.pageX, e.pageY);
+    updateMousePosition(e.x, e.y);
 });
 window.addEventListener("mousemove", e => {
-    updateMousePosition(e.pageX, e.pageY);
+    updateMousePosition(e.x, e.y);
 });
 window.addEventListener("touchstart", e => {
     const touch = e.touches[0];
-    updateMousePosition(touch.pageX, touch.pageY);
+    updateMousePosition(touch.x, touch.y);
 });
 window.addEventListener("touchmove", e => {
     const touch = e.touches[0];
-    updateMousePosition(touch.pageX, touch.pageY);
+    updateMousePosition(touch.x, touch.y);
 });
 
 function updateMousePosition(eX, eY) {
