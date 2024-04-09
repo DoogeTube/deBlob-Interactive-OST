@@ -44,11 +44,9 @@ function disableControls(boolean) {
     let gameSelectorElement = document.getElementById('gameSelector')
     let moodSelectorElement = document.getElementById('moodSelector')
     let playPauseElement = document.getElementById('playPause')
-    let syncButtonElement = document.getElementById('syncButton')
     moodSelectorElement.disabled = boolean
     gameSelectorElement.disabled = boolean
     playPauseElement.disabled = boolean
-    syncButtonElement.disabled = boolean
 }
 var presetListObject = []
 var fetchedSounds = []
