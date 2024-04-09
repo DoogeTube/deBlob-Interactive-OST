@@ -95,7 +95,7 @@ function changeMood(selectedGame, selectedMood) {
     }
 }
 //#region Fetch Stems
-function updateStemProgress(normalizedValue, instant = false) {
+function updateStemProgress(normalizedValue, instant = false, message) {
     let popupContainerElement = document.getElementById('popupContainer');
     popupContainerElement.hidden = false;
     let progressElement = document.getElementById('stemLoadingBar');
@@ -103,34 +103,16 @@ function updateStemProgress(normalizedValue, instant = false) {
     let currentValue = parseFloat(progressElement.value);
     let targetValue = parseFloat(normalizedValue);
 
-    let difference = targetValue - currentValue;
+    progressElement.value = normalizedValue;
+    progressLabel.innerHTML = (currentValue * 100).toFixed(0) + "% " + message;
 
-    clearInterval(progressElement.interval)
-    progressElement.interval = setInterval(() => {
-        let divisor = instant ? 3 : 5 * ((Math.random() + 0.1) * 1000);
-        let stepSize = difference / divisor;
-
-        currentValue += stepSize;
-
-        if ((difference > 0 && currentValue >= targetValue) || (difference < 0 && currentValue <= targetValue)) {
-            currentValue = targetValue;
-            clearInterval(progressElement.interval);
-        }
-
-        progressElement.value = currentValue;
-        progressLabel.innerHTML = (currentValue * 100).toFixed(0) + "%";
-
-        if (currentValue === targetValue) {
-            clearInterval(progressElement.interval);
-        }
-        if (targetValue == 1) {
-            setTimeout(function () {
-                popupContainerElement.hidden = true;
-                progressElement.value = 0;
-                progressLabel.innerHTML = "0%";
-            }, 300);
-        }
-    }, 16.666);
+    if (targetValue == 1) {
+        setTimeout(function () {
+            popupContainerElement.hidden = true;
+            progressElement.value = 0;
+            progressLabel.innerHTML = "0%";
+        }, 300);
+    }
 }
 
 
@@ -142,7 +124,8 @@ function fetchStems(selectedGame, selectedMood) {
     let formattedMoodIndex = String(moodListObject.indexOf(selectedMoodObject) + 1).padStart(2, '0')
     let stemNames = selectedMoodObject.stems
     let fetchedStems = []
-    updateStemProgress("0.42")
+    let totalBytes = 0
+    let loadedBytes = 0
 
     return new Promise((resolve, reject) => {
         let promises = stemNames.map(async (stemName) => {
@@ -151,9 +134,30 @@ function fetchStems(selectedGame, selectedMood) {
                 if (!response.ok) {
                     throw new Error('Network response was not ok')
                 }
-                const blob = await response.blob()
+
+                const contentLength = parseInt(response.headers.get('content-length'), 10)
+                totalBytes += contentLength
+
+                const reader = response.body.getReader()
+                const chunks = []
+
+                while (true) {
+                    const { done, value } = await reader.read()
+
+                    if (done) {
+                        break
+                    }
+
+                    loadedBytes += value.length
+                    const progress = ((loadedBytes / totalBytes) * 0.9)
+                    updateStemProgress(progress, true, `downloading stems: ${fetchedStems.length}/${stemNames.length}`)
+
+                    chunks.push(value)
+                }
+
+                const blob = new Blob(chunks, { type: response.headers.get('content-type') })
                 fetchedStems.push({ blob, stemName })
-                updateStemProgress(0.5 + ((fetchedStems.length / stemNames.length) / 4), true)
+
                 if (fetchedStems.length === stemNames.length) {
                     fetchedStems.sort((a, b) => {
                         return stemNames.indexOf(a.stemName) - stemNames.indexOf(b.stemName)
@@ -171,6 +175,7 @@ function fetchStems(selectedGame, selectedMood) {
             })
     })
 }
+
 function fetchSounds(selectedGame, selectedMood) {
     disableControls(true)
     let moodListObject = musicData[selectedGame].moods
@@ -246,7 +251,7 @@ async function createAudioElements(fetchedStems) {
             try {
                 let arrayBuffer = await blobToArrayBuffer(stemBlob);
                 let audioBuffer = await stemAudioContext.decodeAudioData(arrayBuffer)
-                    .then(updateStemProgress(Math.min(0.901 + (((stemIndex + 1) / fetchedStems.length) / 10), 1), true))
+                    .then(updateStemProgress(Math.min(0.92 + (((stemIndex + 1) / fetchedStems.length) / 10), 1), true, `decoding stems: ${stemIndex + 1}/${fetchedStems.length}`))
 
                 let source = stemAudioContext.createBufferSource();
                 let gainNode = stemAudioContext.createGain();
