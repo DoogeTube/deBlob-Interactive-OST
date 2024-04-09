@@ -90,6 +90,44 @@ function changeMood(selectedGame, selectedMood) {
     fetchSounds(selectedGame, selectedMood)
 }
 //#region Fetch Stems
+function updateStemProgress(normalizedValue, instant = false) {
+    let popupContainerElement = document.getElementById('popupContainer');
+    popupContainerElement.hidden = false;
+    let progressElement = document.getElementById('stemLoadingBar');
+    let progressLabel = findLabelForControl(progressElement);
+    let currentValue = parseFloat(progressElement.value);
+    let targetValue = normalizedValue;
+
+    let difference = targetValue - currentValue;
+
+    clearInterval(progressElement.interval);
+
+    progressElement.interval = setInterval(() => {
+        currentValue += (difference / (instant ? 1 : 50));
+
+        if ((difference > 0 && currentValue >= targetValue) || (difference < 0 && currentValue <= targetValue)) {
+            currentValue = targetValue;
+            clearInterval(progressElement.interval);
+        }
+
+        currentValue = parseFloat(currentValue.toFixed(2));
+        progressElement.value = currentValue;
+        progressLabel.innerHTML = (currentValue * 100).toFixed(2) + "%";
+
+        if (currentValue === targetValue) {
+            clearInterval(progressElement.interval);
+            if (currentValue == 1) {
+                setTimeout(function () {
+                    popupContainerElement.hidden = true;
+                    progressElement.value = 0;
+                }, 250);
+            }
+        }
+    }, 16.666);
+}
+
+
+
 function fetchStems(selectedGame, selectedMood) {
     disableControls(true)
     let moodListObject = musicData[selectedGame].moods
@@ -97,6 +135,8 @@ function fetchStems(selectedGame, selectedMood) {
     let formattedMoodIndex = String(moodListObject.indexOf(selectedMoodObject) + 1).padStart(2, '0')
     let stemNames = selectedMoodObject.stems
     let fetchedStems = []
+    updateStemProgress("0.5")
+
     return new Promise((resolve, reject) => {
         let promises = stemNames.map(async (stemName) => {
             try {
@@ -106,6 +146,7 @@ function fetchStems(selectedGame, selectedMood) {
                 }
                 const blob = await response.blob()
                 fetchedStems.push({ blob, stemName })
+                updateStemProgress(0.5 + ((fetchedStems.length / stemNames.length) / 4), true)
                 if (fetchedStems.length === stemNames.length) {
                     fetchedStems.sort((a, b) => {
                         return stemNames.indexOf(a.stemName) - stemNames.indexOf(b.stemName)
@@ -197,7 +238,8 @@ async function createAudioElements(fetchedStems) {
 
             try {
                 let arrayBuffer = await blobToArrayBuffer(stemBlob);
-                let audioBuffer = await stemAudioContext.decodeAudioData(arrayBuffer);
+                let audioBuffer = await stemAudioContext.decodeAudioData(arrayBuffer)
+                .then(updateStemProgress(0.75 + ((stemIndex / fetchedStems.length) / 4), true))
 
                 let source = stemAudioContext.createBufferSource();
                 let gainNode = stemAudioContext.createGain();
@@ -215,7 +257,7 @@ async function createAudioElements(fetchedStems) {
                 console.error("Error decoding audio data:", error);
             }
         }
-
+        updateStemProgress(1, true)
         disableControls(false);
         createVolumeSliders(fetchedStems);
     })
