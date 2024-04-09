@@ -224,7 +224,7 @@ async function createAudioElements(fetchedStems) {
 
 
 function createVolumeSliders(fetchedStems) {
-    let container = document.getElementById('volumeSlidersContainer');
+    let container = document.getElementById('trackSlidersContainer');
     container.innerHTML = '';
 
     fetchedStems.forEach((item, index) => {

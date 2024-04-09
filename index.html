@@ -15,54 +15,88 @@
     <link rel="stylesheet" href="./style.css">
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
 </head>
-<main>
-    <header>
-        <h1>DeBlob</h1>
-        <h2>Interactive OST</h2>
-    </header>
 
-    <body>
-        <div id="gameAndMood">
-            <button id="playPause">▶</button>
-            <select name="game" id="gameSelector" autocomplete="off">
-                <option value="" disabled selected hidden>Select a Game</option>
-                <option value="deBlob">de Blob</option>
-                <option value="deBlob2">de Blob 2</option>
-                <option value="Unused">Unused</option>
-            </select>
-            <select name="mood" id="moodSelector" autocomplete="off">
-                <option value="" disabled selected hidden>Select a Mood</option>
-            </select>
-        </div>
-        <div id="parentVolumeSlidersContainer">
-            <div class="sliderContainer">
-                <label for="masterVolumeSlider">Master:</label>
-                <input class="slider" type="range" id="masterVolumeSlider" min="0" max="1" step="0.001" value="0.5"></input>
+<body>
+    <main>
+        <header>
+            <h1>DeBlob</h1>
+            <h2>Interactive OST</h2>
+        </header>
+        <nav>
+            <a href="#page0" class="active">stems</a>
+            <a href="#page1">auto play</a>
+            <a href="#page2">info</a>
+        </nav>
+        <div id="content">
+            <div id="page0">
+                <div id="mediaControls">
+                    <button id="playPause">▶</button>
+                    <select name="game" id="gameSelector" autocomplete="off">
+                        <option value="" disabled selected hidden>Select a Game</option>
+                        <option value="deBlob">de Blob</option>
+                        <option value="deBlob2">de Blob 2</option>
+                        <option value="Unused">Unused</option>
+                    </select>
+                    <select name="mood" id="moodSelector" autocomplete="off">
+                        <option value="" disabled selected hidden>Select a Mood</option>
+                    </select>
+                </div>
+                <div id="parentVolumeSlidersContainer">
+                    <div class="sliderContainer">
+                        <label for="masterVolumeSlider">Master:</label>
+                        <input class="slider" type="range" id="masterVolumeSlider" min="0" max="1" step="0.001" value="0.5"></input>
+                    </div>
+                    <div class="sliderContainer" id="presetSliderContainer" style="display:none">
+                        <label for="presetSlider">preset:</label>
+                        <input class="slider" type="range" id="presetSlider" min="0" max="5"></input>
+                    </div>
+                    <div id="trackSlidersContainer"></div>
+                </div>
+                <footer>
+                    <select id="colorSelector">
+                        <option value="red">🟥</option>
+                        <option value="yellow">🟨</option>
+                        <option value="blue">🟦</option>
+                        <option value="orange">🟧</option>
+                        <option value="green">🟩</option>
+                        <option value="purple">🟪</option>
+                        <option value="brown">🟫</option>
+                        <option value="rainbow">🌈</option>
+                    </select>
+                    <button onclick="paint()">Paint!</button>
+                </footer>
             </div>
-            <div id="volumeSlidersContainer"></div>
-            <div class="sliderContainer" id="presetSliderContainer" style="display:none">
-                <label for="presetSlider">preset:</label>
-                <input class="slider" type="range" id="presetSlider" min="0" max="5"></input>
+            <div id="page1">
+                <div id="page1Grid">
+                    <div class="sliderContainer">
+                        <input type="checkbox" name="autoColor">
+                        <label for="autoColor">automatic color sounds</label>
+                    </div>
+                    <div class="sliderContainer">
+                        <input type="checkbox" name="randomColor">
+                        <label for="randomColor">random color change</label>
+                    </div>
+                    <div class="sliderContainer">
+                        <input type="checkbox" name="randomMood">
+                        <label for="randomMood">random mood change</label>
+                    </div>
+                    <div class="sliderContainer">
+                        <input type="checkbox" name="dynamicIntensity">
+                        <label for="dynamicIntensity">dynamic Intensity</label>
+                    </div>
+                </div>
+            </div>
+            <div id="page2">
+                <div class="sliderContainer">
+                    <a href="https://github.com/DoogeTube/deBlob-Interactive-OST">https://github.com/DoogeTube/deBlob-Interactive-OST</a>
+                </div>
             </div>
         </div>
-        <footer>
-            <select id="colorSelector">
-                <option value="red">🟥</option>
-                <option value="yellow">🟨</option>
-                <option value="blue">🟦</option>
-                <option value="orange">🟧</option>
-                <option value="green">🟩</option>
-                <option value="purple">🟪</option>
-                <option value="brown">🟫</option>
-                <option value="rainbow">🌈</option>
-            </select>
-            <button onclick="paint()">Paint!</button>
-        </footer>
-    </body>
-</main>
-<video autoplay muted loop id="bgVideo">
-    <source src="Videos/B2FE_Play_loop.bik.webm" type="video/webm">
-</video>
+    </main>
+    <video autoplay muted loop id="bgVideo">
+        <source src="Videos/B2FE_Play_loop.bik.webm" type="video/webm">
+    </video>
+</body>
 <canvas id="cursorTrailCanvas"></canvas>
 <script src="script.js"></script>
 <script src="cursortrail.js"></script>

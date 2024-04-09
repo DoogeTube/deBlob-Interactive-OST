@@ -1,8 +1,8 @@
 :root {
     --background-color: #f4f4f4;
     --shadow-accent: #13615C;
-    --shadow-color:#217872;
-    --highlight-color:#44b0ac;
+    --shadow-color: #217872;
+    --highlight-color: #44b0ac;
     --default-gradient: linear-gradient(var(--highlight-color), var(--shadow-color), var(--highlight-color));
 }
 
@@ -27,44 +27,88 @@ body {
 
 main {
     max-width: 1000px;
-    margin: 5vh auto 5vh;
+    margin: 0px auto 5lvh;
+}
+
+header {
+    text-align: left;
+    margin:auto;
+    padding:10px;
+    text-shadow: 1px 1px 4px black;
+    h1 {
+        color: orange;
+        margin:0;
+    }
+
+    h2 {
+        color: darkorange;
+        margin:0;
+    }
+}
+
+#content {
+    display:grid;
+    grid-template-columns: 100% 100% 100%;
+    overflow-x:hidden;
+    scroll-behavior:smooth;
     background-color: #fff6;
-    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(5px);
 }
-
-header {
-    text-align: center;
-    margin-bottom: 30px;
+#page0, #page1, #page2{
+    padding:20px;
+}
+#page1Grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 30px;
 }
 
 footer {
     display: flex;
 }
 
-h1 {
-    color: #333;
-    margin: 0;
-}
-
-h2 {
-    color: #666;
-    margin: 0;
-}
-
 label {
     display: block;
     font-weight: bold;
 }
-
-#gameAndMood {
+nav{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 5%;
+    a {
+        text-align:center;
+        padding:5px;
+        background: var(--shadow-color);
+        background-color: var(--shadow-color);
+        border-radius: 12px;
+        border: 4px solid var(--shadow-accent);
+        display: inline-block;
+        color: var(--highlight-color);
+        font-family: Verdana;
+        font-weight: bold;
+        text-decoration: none;
+        transition: 0.2s;
+        margin: 5px 10px
+    }
+    a:hover{
+        scale:110%;
+        background: var(--default-gradient);
+        background-color: var(--shadow-color);
+        border: 4px solid #fcac49;
+        color: #ffffff;
+    }
+    a:active{
+        scale:100%;
+    }
+}
+#mediaControls {
     display: flex;
     overflow: auto;
 }
 
-#gameAndMood button {
+#mediaControls button {
     box-sizing: content-box;
     display: flex;
     justify-content: center;
@@ -76,7 +120,7 @@ label {
     margin-bottom: 5px;
 }
 
-#gameAndMood select {
+#mediaControls select {
     width: 100%;
 }
 
@@ -85,7 +129,7 @@ select {
     background: var(--default-gradient);
     color: white;
     min-width: fit-content;
-    border: 2px solid #000000;
+    border: 2px solid var(--shadow-accent);
     background-color: var(--shadow-color);
     border-radius: 5px;
     -moz-appearance: none;
@@ -211,8 +255,9 @@ select:disabled {
 
 /*#endregion*/
 
-button {
+button{
     background: var(--default-gradient);
+    background-color: var(--shadow-color);
     border-radius: 12px;
     border: 4px solid #fcac49;
     display: inline-block;
@@ -226,11 +271,11 @@ button {
     margin: 0px 10px
 }
 
-button:hover {
+button:hover:not([disabled]) {
     scale: 110%;
 }
 
-button:active {
+button:active:not([disabled]){
     background: var(--shadow-color);
     border-radius: 12px;
     border-color: var(--shadow-accent);
@@ -259,10 +304,13 @@ button:disabled {
     z-index: -1;
 }
 
-@media (max-aspect-ratio: 1/1) {
-    main {
-        margin: 0px;
-        width: 100%;
+@media (width < 1000px) {
+    main{
+        margin:0px, 60px;
+        max-width:100%;
+    }
+    #content {
         border-radius: 0px;
+        padding:0px;
     }
 }
