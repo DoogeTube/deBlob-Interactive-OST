@@ -7,8 +7,8 @@ const pointer = {
     y: .5 * window.innerHeight,
 };
 const params = {
-    pointsNumber: 64,
-    widthFactor: 0.5,
+    pointsNumber: 32,
+    widthFactor: 28,
 };
 
 const points = [];
@@ -52,7 +52,7 @@ function drawLines() {
     addPoint()
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    ctx.globalAlpha = 0.05;
+    ctx.globalAlpha = 1;
     ctx.strokeStyle = "yellow";
 
     ctx.lineCap = "round";
@@ -61,11 +61,12 @@ function drawLines() {
         const xc = .5 * (points[i].x + points[i + 1].x);
         const yc = .5 * (points[i].y + points[i + 1].y);
         ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
-        ctx.lineWidth = params.widthFactor * (i);
-        ctx.stroke();
+        ctx.lineWidth = params.widthFactor
     }
+    ctx.stroke();
 }
 function setupCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    ctx.filter = "blur(4px)"
 }
