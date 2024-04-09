@@ -106,34 +106,31 @@ function updateStemProgress(normalizedValue, instant = false) {
     let difference = targetValue - currentValue;
 
     clearInterval(progressElement.interval)
-    if (targetValue == 1) {
-        progressElement.value = 1;
-        progressLabel.innerHTML = "100%";
-        setTimeout(function () {
-            popupContainerElement.hidden = true;
-            progressElement.value = 0;
-            progressLabel.innerHTML = "0%";
-        }, 300);
-    } else {
-        progressElement.interval = setInterval(() => {
-            let divisor = instant ? 25 : 5 * ((Math.random() + 0.1) * 1000);
-            let stepSize = difference / divisor;
-            
-            currentValue += stepSize;
-    
-            if ((difference > 0 && currentValue >= targetValue) || (difference < 0 && currentValue <= targetValue)) {
-                currentValue = targetValue;
-                clearInterval(progressElement.interval);
-            }
-    
-            progressElement.value = currentValue;
-            progressLabel.innerHTML = (currentValue * 100).toFixed(0) + "%";
-    
-            if (currentValue === targetValue) {
-                clearInterval(progressElement.interval);
-            }
-        }, 16.666);
-    }
+    progressElement.interval = setInterval(() => {
+        let divisor = instant ? 3 : 5 * ((Math.random() + 0.1) * 1000);
+        let stepSize = difference / divisor;
+
+        currentValue += stepSize;
+
+        if ((difference > 0 && currentValue >= targetValue) || (difference < 0 && currentValue <= targetValue)) {
+            currentValue = targetValue;
+            clearInterval(progressElement.interval);
+        }
+
+        progressElement.value = currentValue;
+        progressLabel.innerHTML = (currentValue * 100).toFixed(0) + "%";
+
+        if (currentValue === targetValue) {
+            clearInterval(progressElement.interval);
+        }
+        if (targetValue == 1) {
+            setTimeout(function () {
+                popupContainerElement.hidden = true;
+                progressElement.value = 0;
+                progressLabel.innerHTML = "0%";
+            }, 300);
+        }
+    }, 16.666);
 }
 
 
@@ -249,7 +246,7 @@ async function createAudioElements(fetchedStems) {
             try {
                 let arrayBuffer = await blobToArrayBuffer(stemBlob);
                 let audioBuffer = await stemAudioContext.decodeAudioData(arrayBuffer)
-                    .then(updateStemProgress(0.89 + ((stemIndex / fetchedStems.length) / 10), true))
+                    .then(updateStemProgress(Math.min(0.9 + (((stemIndex + 1) / fetchedStems.length) / 10), 1), true))
 
                 let source = stemAudioContext.createBufferSource();
                 let gainNode = stemAudioContext.createGain();
@@ -267,7 +264,6 @@ async function createAudioElements(fetchedStems) {
                 console.error("Error decoding audio data:", error);
             }
         }
-        updateStemProgress(1, true)
         disableControls(false);
         createVolumeSliders(fetchedStems);
     })
