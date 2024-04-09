@@ -37,7 +37,7 @@ async function setup() {
         masterGainNode.gain.setValueAtTime(masterVolumeSliderElement.value, stemAudioContext.currentTime)
     })
     playPauseElement.addEventListener('click', function () {
-        togglePlayPauseAllTracks(playPauseElement)
+        togglePlayPauseAllTracks()
     })
 }
 function disableControls(boolean) {
@@ -62,32 +62,37 @@ function randomColor() {
 //#region Game Selector
 // Function to populate the mood selector based on selected game
 function changeGame(selectedGame) {
-    let moodSelectorElement = document.getElementById('moodSelector')
-    let moods = musicData[selectedGame].moods
+    if (selectedGame !== "") {
+        let moodSelectorElement = document.getElementById('moodSelector')
+        let moods = musicData[selectedGame].moods
 
-    moodSelectorElement.innerHTML = '<option value="" disabled selected hidden>Select a Mood</option>'
+        moodSelectorElement.innerHTML = '<option value="" disabled selected hidden>Select a Mood</option>'
 
 
-    // Populate the mood selector with new options
-    moods.forEach(mood => {
-        const option = document.createElement('option')
-        option.value = mood.name
-        option.textContent = mood.name
-        moodSelectorElement.appendChild(option)
-    })
+        // Populate the mood selector with new options
+        moods.forEach(mood => {
+            const option = document.createElement('option')
+            option.value = mood.name
+            option.textContent = mood.name
+            moodSelectorElement.appendChild(option)
+        })
+    }
 }
 //#endregion
 function changeMood(selectedGame, selectedMood) {
-    fetchStems(selectedGame, selectedMood)
-        .then(fetchedStems => {
-            createAudioElements(fetchedStems);
-        })
-        .catch(error => {
-            alert(`Couldn't create audio Elements \n${error}`);
-            disableControls(false)
-        });
-    findPresets(selectedGame, selectedMood)
-    fetchSounds(selectedGame, selectedMood)
+    if (selectedMood !== "") {
+        togglePlayPauseAllTracks('pause')
+        fetchStems(selectedGame, selectedMood)
+            .then(fetchedStems => {
+                createAudioElements(fetchedStems);
+            })
+            .catch(error => {
+                alert(`Couldn't create audio Elements \n${error}`);
+                disableControls(false)
+            });
+        findPresets(selectedGame, selectedMood)
+        fetchSounds(selectedGame, selectedMood)
+    }
 }
 //#region Fetch Stems
 function updateStemProgress(normalizedValue, instant = false) {
@@ -239,7 +244,7 @@ async function createAudioElements(fetchedStems) {
             try {
                 let arrayBuffer = await blobToArrayBuffer(stemBlob);
                 let audioBuffer = await stemAudioContext.decodeAudioData(arrayBuffer)
-                .then(updateStemProgress(0.75 + ((stemIndex / fetchedStems.length) / 4), true))
+                    .then(updateStemProgress(0.75 + ((stemIndex / fetchedStems.length) / 4), true))
 
                 let source = stemAudioContext.createBufferSource();
                 let gainNode = stemAudioContext.createGain();
@@ -306,18 +311,19 @@ function lerpAudioTrackVolume(index, volume, lerpLength = 1) {
     let stemSliderElement = document.getElementById('stemSlider' + index);
     stemSliderElement.value = volume;
 }
-function togglePlayPauseAllTracks(playPauseElement) {
-    switch (stemAudioContext.state) {
-        case 'running':
-            stemAudioContext.suspend()
-            playPauseElement.innerHTML = "▶"
+function togglePlayPauseAllTracks(force = '') {
+    playPauseElement = document.getElementById('playPause')
+    switch (true) {
+        case stemAudioContext.state === 'running' || force === 'pause':
+            stemAudioContext.suspend();
+            playPauseElement.innerHTML = "▶";
             break;
-        case 'suspended':
-            stemAudioContext.resume()
-            playPauseElement.innerHTML = "⏸"
+        case stemAudioContext.state === 'suspended' || force === 'play':
+            stemAudioContext.resume();
+            playPauseElement.innerHTML = "⏸";
             break;
         default:
-            alert(`pick a track before pressing play!`)
+            console.log(`Pick a track before pressing play!`);
             break;
     }
 }
