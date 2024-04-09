@@ -101,34 +101,39 @@ function updateStemProgress(normalizedValue, instant = false) {
     let progressElement = document.getElementById('stemLoadingBar');
     let progressLabel = findLabelForControl(progressElement);
     let currentValue = parseFloat(progressElement.value);
-    let targetValue = normalizedValue;
+    let targetValue = parseFloat(normalizedValue);
 
     let difference = targetValue - currentValue;
 
-    clearInterval(progressElement.interval);
-
-    progressElement.interval = setInterval(() => {
-        currentValue += (difference / (instant ? 1 : 50));
-
-        if ((difference > 0 && currentValue >= targetValue) || (difference < 0 && currentValue <= targetValue)) {
-            currentValue = targetValue;
-            clearInterval(progressElement.interval);
-        }
-
-        currentValue = parseFloat(currentValue.toFixed(2));
-        progressElement.value = currentValue;
-        progressLabel.innerHTML = (currentValue * 100).toFixed(2) + "%";
-
-        if (currentValue === targetValue) {
-            clearInterval(progressElement.interval);
-            if (currentValue == 1) {
-                setTimeout(function () {
-                    popupContainerElement.hidden = true;
-                    progressElement.value = 0;
-                }, 250);
+    clearInterval(progressElement.interval)
+    if (targetValue == 1) {
+        progressElement.value = 1;
+        progressLabel.innerHTML = "100%";
+        setTimeout(function () {
+            popupContainerElement.hidden = true;
+            progressElement.value = 0;
+            progressLabel.innerHTML = "0%";
+        }, 300);
+    } else {
+        progressElement.interval = setInterval(() => {
+            let divisor = instant ? 25 : 5 * ((Math.random() + 0.1) * 1000);
+            let stepSize = difference / divisor;
+            
+            currentValue += stepSize;
+    
+            if ((difference > 0 && currentValue >= targetValue) || (difference < 0 && currentValue <= targetValue)) {
+                currentValue = targetValue;
+                clearInterval(progressElement.interval);
             }
-        }
-    }, 16.666);
+    
+            progressElement.value = currentValue;
+            progressLabel.innerHTML = (currentValue * 100).toFixed(0) + "%";
+    
+            if (currentValue === targetValue) {
+                clearInterval(progressElement.interval);
+            }
+        }, 16.666);
+    }
 }
 
 
@@ -140,7 +145,7 @@ function fetchStems(selectedGame, selectedMood) {
     let formattedMoodIndex = String(moodListObject.indexOf(selectedMoodObject) + 1).padStart(2, '0')
     let stemNames = selectedMoodObject.stems
     let fetchedStems = []
-    updateStemProgress("0.5")
+    updateStemProgress("0.42")
 
     return new Promise((resolve, reject) => {
         let promises = stemNames.map(async (stemName) => {
@@ -244,7 +249,7 @@ async function createAudioElements(fetchedStems) {
             try {
                 let arrayBuffer = await blobToArrayBuffer(stemBlob);
                 let audioBuffer = await stemAudioContext.decodeAudioData(arrayBuffer)
-                    .then(updateStemProgress(0.75 + ((stemIndex / fetchedStems.length) / 4), true))
+                    .then(updateStemProgress(0.89 + ((stemIndex / fetchedStems.length) / 10), true))
 
                 let source = stemAudioContext.createBufferSource();
                 let gainNode = stemAudioContext.createGain();
