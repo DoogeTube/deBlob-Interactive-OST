@@ -246,7 +246,7 @@ async function createAudioElements(fetchedStems) {
             try {
                 let arrayBuffer = await blobToArrayBuffer(stemBlob);
                 let audioBuffer = await stemAudioContext.decodeAudioData(arrayBuffer)
-                    .then(updateStemProgress(Math.min(0.9 + (((stemIndex + 1) / fetchedStems.length) / 10), 1), true))
+                    .then(updateStemProgress(Math.min(0.901 + (((stemIndex + 1) / fetchedStems.length) / 10), 1), true))
 
                 let source = stemAudioContext.createBufferSource();
                 let gainNode = stemAudioContext.createGain();
