@@ -37,7 +37,7 @@ async function setup() {
         masterGainNode.gain.setValueAtTime(masterVolumeSliderElement.value, stemAudioContext.currentTime)
     })
     playPauseElement.addEventListener('click', function () {
-        togglePlayPauseAllTracks(playPauseElement)
+        togglePlayPauseAllTracks()
     })
 }
 function disableControls(boolean) {
@@ -62,34 +62,61 @@ function randomColor() {
 //#region Game Selector
 // Function to populate the mood selector based on selected game
 function changeGame(selectedGame) {
-    let moodSelectorElement = document.getElementById('moodSelector')
-    let moods = musicData[selectedGame].moods
+    if (selectedGame !== "") {
+        let moodSelectorElement = document.getElementById('moodSelector')
+        let moods = musicData[selectedGame].moods
 
-    moodSelectorElement.innerHTML = '<option value="" disabled selected hidden>Select a Mood</option>'
+        moodSelectorElement.innerHTML = '<option value="" disabled selected hidden>Select a Mood</option>'
 
 
-    // Populate the mood selector with new options
-    moods.forEach(mood => {
-        const option = document.createElement('option')
-        option.value = mood.name
-        option.textContent = mood.name
-        moodSelectorElement.appendChild(option)
-    })
+        // Populate the mood selector with new options
+        moods.forEach(mood => {
+            const option = document.createElement('option')
+            option.value = mood.name
+            option.textContent = mood.name
+            moodSelectorElement.appendChild(option)
+        })
+    }
 }
 //#endregion
 function changeMood(selectedGame, selectedMood) {
-    fetchStems(selectedGame, selectedMood)
-        .then(fetchedStems => {
-            createAudioElements(fetchedStems);
-        })
-        .catch(error => {
-            alert(`Couldn't create audio Elements \n${error}`);
-            disableControls(false)
-        });
-    findPresets(selectedGame, selectedMood)
-    fetchSounds(selectedGame, selectedMood)
+    if (selectedMood !== "") {
+        togglePlayPauseAllTracks('pause')
+        fetchStems(selectedGame, selectedMood)
+            .then(fetchedStems => {
+                createAudioElements(fetchedStems);
+            })
+            .catch(error => {
+                alert(`Couldn't create audio Elements \n${error}`);
+                disableControls(false)
+            });
+        findPresets(selectedGame, selectedMood)
+        fetchSounds(selectedGame, selectedMood)
+    }
 }
 //#region Fetch Stems
+function updateStemProgress(normalizedValue, instant = false, message) {
+    let popupContainerElement = document.getElementById('popupContainer');
+    popupContainerElement.hidden = false;
+    let progressElement = document.getElementById('stemLoadingBar');
+    let progressLabel = findLabelForControl(progressElement);
+    let currentValue = parseFloat(progressElement.value);
+    let targetValue = parseFloat(normalizedValue);
+
+    progressElement.value = normalizedValue;
+    progressLabel.innerHTML = (currentValue * 100).toFixed(0) + "% " + message;
+
+    if (targetValue == 1) {
+        setTimeout(function () {
+            popupContainerElement.hidden = true;
+            progressElement.value = 0;
+            progressLabel.innerHTML = "0%";
+        }, 300);
+    }
+}
+
+
+
 function fetchStems(selectedGame, selectedMood) {
     disableControls(true)
     let moodListObject = musicData[selectedGame].moods
@@ -97,6 +124,9 @@ function fetchStems(selectedGame, selectedMood) {
     let formattedMoodIndex = String(moodListObject.indexOf(selectedMoodObject) + 1).padStart(2, '0')
     let stemNames = selectedMoodObject.stems
     let fetchedStems = []
+    let totalBytes = 0
+    let loadedBytes = 0
+
     return new Promise((resolve, reject) => {
         let promises = stemNames.map(async (stemName) => {
             try {
@@ -104,8 +134,30 @@ function fetchStems(selectedGame, selectedMood) {
                 if (!response.ok) {
                     throw new Error('Network response was not ok')
                 }
-                const blob = await response.blob()
+
+                const contentLength = parseInt(response.headers.get('content-length'), 10)
+                totalBytes += contentLength
+
+                const reader = response.body.getReader()
+                const chunks = []
+
+                while (true) {
+                    const { done, value } = await reader.read()
+
+                    if (done) {
+                        break
+                    }
+
+                    loadedBytes += value.length
+                    const progress = ((loadedBytes / totalBytes) * 0.9)
+                    updateStemProgress(progress, true, `downloading stems: ${fetchedStems.length}/${stemNames.length}`)
+
+                    chunks.push(value)
+                }
+
+                const blob = new Blob(chunks, { type: response.headers.get('content-type') })
                 fetchedStems.push({ blob, stemName })
+
                 if (fetchedStems.length === stemNames.length) {
                     fetchedStems.sort((a, b) => {
                         return stemNames.indexOf(a.stemName) - stemNames.indexOf(b.stemName)
@@ -123,6 +175,7 @@ function fetchStems(selectedGame, selectedMood) {
             })
     })
 }
+
 function fetchSounds(selectedGame, selectedMood) {
     disableControls(true)
     let moodListObject = musicData[selectedGame].moods
@@ -197,7 +250,8 @@ async function createAudioElements(fetchedStems) {
 
             try {
                 let arrayBuffer = await blobToArrayBuffer(stemBlob);
-                let audioBuffer = await stemAudioContext.decodeAudioData(arrayBuffer);
+                let audioBuffer = await stemAudioContext.decodeAudioData(arrayBuffer)
+                    .then(updateStemProgress(Math.min(0.92 + (((stemIndex + 1) / fetchedStems.length) / 10), 1), true, `decoding stems: ${stemIndex + 1}/${fetchedStems.length}`))
 
                 let source = stemAudioContext.createBufferSource();
                 let gainNode = stemAudioContext.createGain();
@@ -215,7 +269,6 @@ async function createAudioElements(fetchedStems) {
                 console.error("Error decoding audio data:", error);
             }
         }
-
         disableControls(false);
         createVolumeSliders(fetchedStems);
     })
@@ -264,18 +317,19 @@ function lerpAudioTrackVolume(index, volume, lerpLength = 1) {
     let stemSliderElement = document.getElementById('stemSlider' + index);
     stemSliderElement.value = volume;
 }
-function togglePlayPauseAllTracks(playPauseElement) {
-    switch (stemAudioContext.state) {
-        case 'running':
-            stemAudioContext.suspend()
-            playPauseElement.innerHTML = "▶"
+function togglePlayPauseAllTracks(force = '') {
+    playPauseElement = document.getElementById('playPause')
+    switch (true) {
+        case stemAudioContext.state === 'running' || force === 'pause':
+            stemAudioContext.suspend();
+            playPauseElement.innerHTML = "▶";
             break;
-        case 'suspended':
-            stemAudioContext.resume()
-            playPauseElement.innerHTML = "⏸"
+        case stemAudioContext.state === 'suspended' || force === 'play':
+            stemAudioContext.resume();
+            playPauseElement.innerHTML = "⏸";
             break;
         default:
-            alert(`pick a track before pressing play!`)
+            console.log(`Pick a track before pressing play!`);
             break;
     }
 }

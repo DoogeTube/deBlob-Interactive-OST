@@ -92,10 +92,27 @@
                 </div>
             </div>
         </div>
-    </main>
-    <video autoplay muted loop id="bgVideo">
-        <source src="Videos/B2FE_Play_loop.bik.webm" type="video/webm">
-    </video>
+        <footer>
+            <select id="colorSelector">
+                <option value="red">🟥</option>
+                <option value="yellow">🟨</option>
+                <option value="blue">🟦</option>
+                <option value="orange">🟧</option>
+                <option value="green">🟩</option>
+                <option value="purple">🟪</option>
+                <option value="brown">🟫</option>
+                <option value="rainbow">🌈</option>
+            </select>
+            <button onclick="paint()">Paint!</button>
+        </footer>
+</main>
+<div id="popupContainer" hidden>
+<progress id="stemLoadingBar" value="0"></progress>
+<label for="stemLoadingBar">0%</label>
+</div>
+<video autoplay muted loop id="bgVideo">
+    <source src="Videos/B2FE_Play_loop.bik.webm" type="video/webm">
+</video>
 </body>
 <canvas id="cursorTrailCanvas"></canvas>
 <script src="script.js"></script>
