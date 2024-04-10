@@ -13,9 +13,6 @@ const params = {
 
 const points = [];
 
-window.addEventListener("click", e => {
-    updateMousePosition(e.x, e.y);
-});
 window.addEventListener("mousemove", e => {
     updateMousePosition(e.x, e.y);
 });
